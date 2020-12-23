@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.mhtech</groupId>
-	<artifactId>dubbo-project-consumer</artifactId>
+	<artifactId>dubbo-yg-consumer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>dubbo-project-consumer</name>
 	<description>消费者</description>

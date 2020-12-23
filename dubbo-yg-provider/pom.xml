@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.mhtech</groupId>
-    <artifactId>dubbo-project-provider</artifactId>
+    <artifactId>dubbo-yg-provider</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>dubbo-project-provider</name>
     <description>提供者</description>
