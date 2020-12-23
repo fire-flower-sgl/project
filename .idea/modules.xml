@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/dubbo-yg-api/dubbo-project-api.iml" filepath="$PROJECT_DIR$/dubbo-yg-api/dubbo-project-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/dubbo-yg-consumer/dubbo-project-consumer.iml" filepath="$PROJECT_DIR$/dubbo-yg-consumer/dubbo-project-consumer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/dubbo-yg-provider/dubbo-project-provider.iml" filepath="$PROJECT_DIR$/dubbo-yg-provider/dubbo-project-provider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dubbo-yg-api/dubbo-yg-api.iml" filepath="$PROJECT_DIR$/dubbo-yg-api/dubbo-yg-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dubbo-yg-consumer/dubbo-yg-consumer.iml" filepath="$PROJECT_DIR$/dubbo-yg-consumer/dubbo-yg-consumer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dubbo-yg-provider/dubbo-yg-provider.iml" filepath="$PROJECT_DIR$/dubbo-yg-provider/dubbo-yg-provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/project.iml" filepath="$PROJECT_DIR$/.idea/project.iml" />
     </modules>
   </component>
