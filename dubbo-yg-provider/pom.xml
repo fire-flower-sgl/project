@@ -11,7 +11,7 @@
     <groupId>com.mhtech</groupId>
     <artifactId>dubbo-yg-provider</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>dubbo-project-provider</name>
+    <name>dubbo-yg-provider</name>
     <description>提供者</description>
 
     <properties>
@@ -23,7 +23,7 @@
 
         <dependency>
             <groupId>com.mhtech</groupId>
-            <artifactId>dubbo-project-api</artifactId>
+            <artifactId>dubbo-yg-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
