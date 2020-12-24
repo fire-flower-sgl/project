@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.ServerDiagramMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.sharing.dao.model.ServerDiagram" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="business_id" property="businessId" jdbcType="BIGINT" />
+    <result column="server_id" property="serverId" jdbcType="BIGINT" />
+    <result column="next_id" property="nextId" jdbcType="BIGINT" />
+    <result column="work_desc" property="workDesc" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="server_name" property="serverDesc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, business_id, server_id, next_id, work_desc, status, created_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sp_server_diagram
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sp_server_diagram
+    where id in 
+    <foreach collection="keys" item="id" open="(" separator="," close=")">
+  		  #{id}
+    </foreach> 
+  </delete>
+  <insert id="insert" parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerDiagram" >
+    insert into sp_server_diagram (id, business_id, server_id, 
+      next_id, work_desc, status, 
+      created_time)
+    values (#{id,jdbcType=BIGINT}, #{businessId,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT}, 
+      #{nextId,jdbcType=BIGINT}, #{workDesc,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT}, 
+      #{createdTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerDiagram" >
+    insert into sp_server_diagram
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="businessId != null" >
+        business_id,
+      </if>
+      <if test="serverId != null" >
+        server_id,
+      </if>
+      <if test="nextId != null" >
+        next_id,
+      </if>
+      <if test="workDesc != null" >
+        work_desc,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="businessId != null" >
+        #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="serverId != null" >
+        #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="nextId != null" >
+        #{nextId,jdbcType=BIGINT},
+      </if>
+      <if test="workDesc != null" >
+        #{workDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerDiagram" >
+    update sp_server_diagram
+    <set >
+      <if test="businessId != null" >
+        business_id = #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="serverId != null" >
+        server_id = #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="nextId != null" >
+        next_id = #{nextId,jdbcType=BIGINT},
+      </if>
+      <if test="workDesc != null" >
+        work_desc = #{workDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerDiagram" >
+    update sp_server_diagram
+    set business_id = #{businessId,jdbcType=BIGINT},
+      server_id = #{serverId,jdbcType=BIGINT},
+      next_id = #{nextId,jdbcType=BIGINT},
+      work_desc = #{workDesc,jdbcType=VARCHAR},
+      status = #{status,jdbcType=SMALLINT},
+      created_time = #{createdTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectEntities" resultMap="BaseResultMap" parameterType="long" >
+	 	SELECT a.id,a.business_id,a.server_id,b.server_name,a.next_id,a.work_desc,a.status,c.parm_name statusName ,d.server_name as nextName from sp_server_diagram  a 
+	 			LEFT JOIN  sp_server_admin b on a.server_id = b.id 
+	 			LEFT JOIN  sys_parameter c  on a.status = c.parm_code and c.parm_type='diagramStatus'
+	 			LEFT JOIN  sp_server_admin d  on d.id = a.next_id
+	 		where a.business_id = #{businessId}
+	 		order by a.id
+  </select>
+  
+  <delete id="delByBusinessId" parameterType="java.lang.Long" >
+    delete from sp_server_diagram
+    where business_id = #{businessId,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="batchInsert" parameterType="list">
+    insert into sp_server_diagram (id, business_id, server_id, next_id, work_desc, status, created_time) values 
+	<foreach collection="list" item="obj" separator="," >
+		(#{obj.id,jdbcType=BIGINT}, #{obj.businessId,jdbcType=BIGINT}, #{obj.serverId,jdbcType=BIGINT}, 
+      #{obj.nextId,jdbcType=BIGINT}, #{obj.workDesc,jdbcType=VARCHAR}, #{obj.status,jdbcType=SMALLINT}, 
+      now())
+	</foreach>
+  </insert>
+
+</mapper>

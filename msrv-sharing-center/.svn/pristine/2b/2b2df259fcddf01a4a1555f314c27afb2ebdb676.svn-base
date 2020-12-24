@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mhtech.platform.msrv.sharing.dao.mapper.ServerAlertRuleMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.ServerAlertRule">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="server_id" property="serverId"
+			jdbcType="BIGINT" />
+		<result column="param_name" property="paramName"
+			jdbcType="VARCHAR" />
+		<result column="alert_limit" property="alertLimit"
+			jdbcType="SMALLINT" />
+		<result column="duration" property="duration" jdbcType="BIGINT" />
+		<result column="created_time" property="createdTime"
+			jdbcType="TIMESTAMP" />
+		<result column="level" property="level" jdbcType="SMALLINT" />
+		<result column="contacts" property="contacts"
+			jdbcType="VARCHAR" />
+		<result column="stop_listen_start" property="stopListenStart"
+			jdbcType="TIMESTAMP" />
+		<result column="stop_listen_end" property="stopListenEnd"
+			jdbcType="TIMESTAMP" />
+		
+		<result column="notify_method" property="notifyMethod"
+			jdbcType="VARCHAR" />
+		<result column="contacts_method" property="contactsMethod"
+			jdbcType="VARCHAR" />
+		<result column="notify_status" property="notifyStatus"
+			jdbcType="VARCHAR" />
+		<result column="temp_stop_listen_start" property="tempStopListenStart"
+			jdbcType="TIMESTAMP" />
+		<result column="temp_stop_listen_end" property="tempStopListenEnd"
+			jdbcType="TIMESTAMP" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, server_id, param_name, alert_limit, duration,
+		created_time,level,contacts,stop_listen_start,stop_listen_end,level,
+		notify_method,contacts_method,notify_status, temp_stop_listen_start, temp_stop_listen_end
+	</sql>
+
+	<select id="selectList" resultMap="BaseResultMap"
+		parameterType="com.mhtech.platform.log.pojo.ServerAlertRuleDTO">
+		SELECT * from sp_server_alert_rule
+		<where>
+			<if test="id!=null">and id=#{id} </if>
+			<if test="serverId!=null">and server_id=#{serverId}</if>
+			<if test="paramName!=null">and param_name=#{paramName}</if>
+			<if test="alertLimit!=null">and alert_limit=#{alertLimit}</if>
+			<if test="level!=null">and level=#{level}</if>
+			<if test="contacts!=null">and contacts=#{contacts}</if>
+			<if test="stopListenStart!=null">and stop_listen_start=#{stopListenStart}</if>
+			<if test="stopListenEnd!=null"> and stop_listen_end=#{stopListenEnd} </if>
+			<if test="duration!=null"> and duration=#{duration} </if>
+			<if test="topTime!=null"> and created_time &gt;=#{topTime} </if>
+			<if test="endTime!=null"> and created_time &lt; =#{endTime} </if>
+		</where>
+	</select>
+
+	<select id="selectSum" resultType="java.lang.Integer"
+		parameterType="com.mhtech.platform.log.pojo.ServerAlertRuleDTO">
+		SELECT COUNT(id) from sp_server_alert_rule
+		<where>
+			<if test="id!=null">and id=#{id} </if>
+			<if test="serverId!=null">and server_id=#{serverId}</if>
+			<if test="paramName!=null">and param_name=#{paramName}</if>
+			<if test="alertLimit!=null">and alert_limit=#{alertLimit}</if>
+			<if test="level!=null">and level=#{level}</if>
+			<if test="contacts!=null">and contacts=#{contacts}</if>
+			<if test="stopListenStart!=null">and stop_listen_start=#{stopListenStart}</if>
+			<if test="stopListenEnd!=null"> and stop_listen_end=#{stopListenEnd} </if>
+			<if test="duration!=null"> and duration=#{duration} </if>
+			<if test="topTime!=null"> and created_time &gt;=#{topTime} </if>
+			<if test="endTime!=null"> and created_time &lt; =#{endTime} </if>
+		</where>
+	</select>
+
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from sp_server_alert_rule
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		sp_server_alert_rule
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerAlertRule">
+		insert into sp_server_alert_rule (id, server_id,
+		param_name,
+		alert_limit, duration, created_time
+		)
+		values
+		(#{id,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT},
+		#{paramName,jdbcType=VARCHAR},
+		#{alertLimit,jdbcType=SMALLINT},
+		#{duration,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<insert id="insertSelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerAlertRule">
+		insert into sp_server_alert_rule
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="serverId != null">
+				server_id,
+			</if>
+			<if test="paramName != null">
+				param_name,
+			</if>
+			<if test="alertLimit != null">
+				alert_limit,
+			</if>
+			<if test="duration != null">
+				duration,
+			</if>
+			<if test="createdTime != null">
+				created_time,
+			</if>
+			<if test="level != null">
+				level,
+			</if>
+			<if test="contacts != null">
+				contacts,
+			</if>
+
+			<if test="stopListenStart != null">
+				stop_listen_start,
+			</if>
+			<if test="stopListenEnd != null">
+				stop_listen_end,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="serverId != null">
+				#{serverId,jdbcType=BIGINT},
+			</if>
+			<if test="paramName != null">
+				#{paramName,jdbcType=VARCHAR},
+			</if>
+			<if test="alertLimit != null">
+				#{alertLimit,jdbcType=SMALLINT},
+			</if>
+			<if test="duration != null">
+				#{duration,jdbcType=BIGINT},
+			</if>
+			<if test="createdTime != null">
+				#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=SMALLINT},
+			</if>
+			<if test="contacts != null">
+				#{contacts,jdbcType=VARCHAR},
+			</if>
+			<if test="stopListenStart != null">
+				#{stopListenStart,jdbcType=TIMESTAMP},
+			</if>
+			<if test="stopListenEnd != null">
+				#{stopListenEnd,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerAlertRule">
+		update sp_server_alert_rule
+		<set>
+			<if test="serverId != null">
+				server_id = #{serverId,jdbcType=BIGINT},
+			</if>
+			<if test="paramName != null">
+				param_name = #{paramName,jdbcType=VARCHAR},
+			</if>
+			<if test="alertLimit != null">
+				alert_limit = #{alertLimit,jdbcType=SMALLINT},
+			</if>
+			<if test="duration != null">
+				duration = #{duration,jdbcType=BIGINT},
+			</if>
+			<if test="createdTime != null">
+				created_time = #{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="level != null">
+				level = #{level,jdbcType=SMALLINT},
+			</if>
+			<if test="alertLimit != null">
+				alert_limit = #{alertLimit,jdbcType=SMALLINT},
+			</if>
+			<if test="stopListenStart != null">
+				stop_listen_start =
+				#{stopListenStart,jdbcType=TIMESTAMP},
+			</if>
+			<if test="stopListenEnd != null">
+				stop_listen_end = #{stopListenEnd,jdbcType=TIMESTAMP},
+			</if>
+
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerAlertRule">
+		update sp_server_alert_rule
+		set server_id =
+		#{serverId,jdbcType=BIGINT},
+		param_name =
+		#{paramName,jdbcType=VARCHAR},
+		alert_limit =
+		#{alertLimit,jdbcType=SMALLINT},
+		duration =
+		#{duration,jdbcType=BIGINT},
+		created_time =
+		#{createdTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectEntities" resultMap="BaseResultMap"
+		parameterType="com.mhtech.platform.msrv.pojo.AlertRuleVO">
+		select
+		<include refid="Base_Column_List" />
+		from sp_server_alert_rule
+		where server_id = #{serverId} and param_name
+		= #{paramName} order by level
+	</select>
+
+	<!-- 修改服务暂停监控时间 -->
+	<update id="updateAlertTime"
+		parameterType="com.mhtech.platform.msrv.pojo.AlertInfoUpdate">
+		update sp_server_alert_rule
+		set stop_listen_start =
+		#{refuseStartTime,jdbcType=TIMESTAMP},
+		stop_listen_end =
+		#{refuseEndTime,jdbcType=TIMESTAMP}
+		where server_id =
+		#{serverId,jdbcType=BIGINT} and param_name =
+		#{paramName,jdbcType=VARCHAR}
+	</update>
+
+   	<select id="selectByDuration" resultMap="BaseResultMap" 
+   	parameterType="com.mhtech.platform.msrv.pojo.AlertRuleVO" >
+    	select 
+    	<include refid="Base_Column_List" />
+    	from sp_server_alert_rule
+    	where duration &gt;= #{startPort} and duration &lt; #{endPort} 
+    	order by param_name ,level
+  	</select>
+</mapper>

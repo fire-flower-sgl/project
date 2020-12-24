@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.SpShiftMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.SpShift">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<id column="shiftId" property="shiftid" jdbcType="VARCHAR" />
+		<result column="shift" property="shift" jdbcType="VARCHAR" />
+		<result column="start_time" property="startTime" jdbcType="VARCHAR" />
+		<result column="end_time" property="endTime" jdbcType="VARCHAR" />
+		<result column="unit_id" property="unitId" jdbcType="VARCHAR" />
+		<result column="shift_weight" property="shiftWeight" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap type="com.mhtech.platform.msrv.pojo.SpUserShift" id="UserShiftMap"></resultMap>
+	<sql id="Base_Column_List">
+		id, shiftId, shift, start_time, end_time, unit_id, shift_weight
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.SpShift">
+		select
+		<include refid="Base_Column_List" />
+		from sp_shift
+		where id = #{id,jdbcType=VARCHAR}
+		and shiftId = #{shiftid,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="listUserOnDuty" resultMap="UserShiftMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sp_user_shift
+		where ip = #{serverIp,jdbcType=VARCHAR}
+		and shift_time between DATE_FORMAT(now(), '%Y-%m-%d 00:00:00') and DATE_FORMAT(now(), '%Y-%m-%d 23:59:59')
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="com.mhtech.platform.msrv.sharing.dao.model.SpShift">
+		delete from sp_shift
+		where id = #{id,jdbcType=VARCHAR}
+		and shiftId = #{shiftid,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.mhtech.platform.msrv.sharing.dao.model.SpShift">
+		insert into sp_shift (id, shiftId, shift,
+		start_time, end_time, unit_id,
+		shift_weight)
+		values (#{id,jdbcType=VARCHAR}, #{shiftid,jdbcType=VARCHAR},
+		#{shift,jdbcType=VARCHAR},
+		#{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR}, #{unitId,jdbcType=VARCHAR},
+		#{shiftWeight,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.SpShift">
+		insert into sp_shift
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="shiftid != null">
+				shiftId,
+			</if>
+			<if test="shift != null">
+				shift,
+			</if>
+			<if test="startTime != null">
+				start_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="unitId != null">
+				unit_id,
+			</if>
+			<if test="shiftWeight != null">
+				shift_weight,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="shiftid != null">
+				#{shiftid,jdbcType=VARCHAR},
+			</if>
+			<if test="shift != null">
+				#{shift,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=VARCHAR},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=VARCHAR},
+			</if>
+			<if test="unitId != null">
+				#{unitId,jdbcType=VARCHAR},
+			</if>
+			<if test="shiftWeight != null">
+				#{shiftWeight,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.SpShift">
+		update sp_shift
+		<set>
+			<if test="shift != null">
+				shift = #{shift,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				start_time = #{startTime,jdbcType=VARCHAR},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=VARCHAR},
+			</if>
+			<if test="unitId != null">
+				unit_id = #{unitId,jdbcType=VARCHAR},
+			</if>
+			<if test="shiftWeight != null">
+				shift_weight = #{shiftWeight,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+		and shiftId = #{shiftid,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.sharing.dao.model.SpShift">
+		update sp_shift
+		set shift = #{shift,jdbcType=VARCHAR},
+		start_time = #{startTime,jdbcType=VARCHAR},
+		end_time = #{endTime,jdbcType=VARCHAR},
+		unit_id = #{unitId,jdbcType=VARCHAR},
+		shift_weight = #{shiftWeight,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+		and shiftId = #{shiftid,jdbcType=VARCHAR}
+	</update>
+</mapper>

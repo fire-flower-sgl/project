@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.HardwareTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.sharing.dao.model.HardwareType" >
+    <id column="type_code" property="typeCode" jdbcType="VARCHAR" />
+    <result column="type_alias" property="typeAlias" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    type_code, type_alias, unit, memo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sp_hardware_type
+    where type_code = #{typeCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sp_hardware_type
+    where type_code = #{typeCode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.mhtech.platform.msrv.pojo.HardwareTypeDTO" >
+    insert into sp_hardware_type (type_code, type_alias, unit, 
+      memo)
+    values (#{typeCode,jdbcType=VARCHAR}, #{typeAlias,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
+      #{memo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mhtech.platform.msrv.pojo.HardwareTypeDTO" >
+    insert into sp_hardware_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="typeCode != null" >
+        type_code,
+      </if>
+      <if test="typeAlias != null" >
+        type_alias,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="typeCode != null" >
+        #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="typeAlias != null" >
+        #{typeAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.pojo.HardwareTypeDTO" >
+    update sp_hardware_type
+    <set >
+      <if test="typeAlias != null" >
+        type_alias = #{typeAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where type_code = #{typeCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.pojo.HardwareTypeDTO" >
+    update sp_hardware_type
+    set type_alias = #{typeAlias,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR}
+    where type_code = #{typeCode,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectEntities" resultMap="BaseResultMap" parameterType="com.mhtech.platform.msrv.pojo.HardwareTypeDTO" >
+   	select 
+    	<include refid="Base_Column_List" />
+    from sp_hardware_type
+  </select>
+  
+  <insert id="batchInsert" parameterType="list">
+	insert into sp_hardware_type (type_code, type_alias, unit, memo) values 
+		<foreach collection="list" item="gal" separator="," >
+			(#{gal.typeCode,jdbcType=VARCHAR},#{gal.typeAlias,jdbcType=VARCHAR},#{gal.unit,jdbcType=VARCHAR},#{gal.memo,jdbcType=VARCHAR})
+		</foreach>
+  </insert>
+
+  <select id="isExist" resultType="int" parameterType="com.mhtech.platform.msrv.pojo.HardwareTypeDTO" >
+   	select count(1) from sp_hardware_type
+    where 1 = 1 
+		<if test="typeCode != null">
+			and type_code = #{typeCode}
+		</if>
+  </select>
+	  
+</mapper>

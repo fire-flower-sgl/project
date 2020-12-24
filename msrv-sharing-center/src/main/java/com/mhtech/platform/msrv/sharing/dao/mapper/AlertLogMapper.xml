@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mhtech.platform.msrv.sharing.dao.mapper.AlertLogMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.AlertLog">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="server_id" property="serverId"
+			jdbcType="BIGINT" />
+		<result column="param_name" property="paramName"
+			jdbcType="VARCHAR" />
+		<result column="param_alias" property="paramAlias"
+			jdbcType="VARCHAR" />
+		<result column="alter_value" property="alterValue"
+			jdbcType="DECIMAL" />
+		<result column="alert_time" property="alertTime"
+			jdbcType="TIMESTAMP" />
+		<result column="is_alerting" property="isAlerting"
+			jdbcType="BIT" />
+		<result column="notify_id" property="notifyId" jdbcType="BIGINT" />
+	</resultMap>
+	<resultMap id="ServerAlertLogQtyMap"
+		type="com.mhtech.platform.msrv.pojo.ServerAlertLogQty">
+		<result column="server_id" property="serverId"
+			jdbcType="BIGINT" />
+		<result column="qty" property="qty" jdbcType="INTEGER" />
+		<result column="is_alerting" property="isAlerting"
+			jdbcType="BIT" />
+	</resultMap>
+	<resultMap id="TypeAlertMap"
+		type="com.mhtech.platform.msrv.pojo.ParamAlertVO">
+		<result column="param_name" property="paramName"
+			jdbcType="BIGINT" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="ListResultMap"
+		type="com.mhtech.platform.msrv.pojo.AlertLog">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="server_id" property="serverId"
+			jdbcType="BIGINT" />
+		<result column="param_name" property="paramName"
+			jdbcType="VARCHAR" />
+		<result column="param_alias" property="paramAlias"
+			jdbcType="VARCHAR" />
+		<result column="alter_value" property="alterValue"
+			jdbcType="DECIMAL" />
+		<result column="alert_time" property="alertTime"
+			jdbcType="TIMESTAMP" />
+		<result column="is_alerting" property="isAlerting"
+			jdbcType="BIT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, server_id, param_name, param_alias, alter_value,
+		alert_time,
+		is_alerting, notify_id
+	</sql>
+
+
+	<select id="allLog" resultMap="BaseResultMap" >
+		SELECT * from sp_alert_log where id &lt;= #{max} and id &gt;= #{min} limit #{eachItem}; 
+	</select>
+	
+	 <select id="selectManMin" resultType="Map" parameterType="java.lang.String">
+	     select MAX(id) max,MIN(id) min,COUNT(id) size from  sp_alert_log where alert_time BETWEEN #{topTime} and #{endTime}
+	 </select>
+  
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE from sp_alert_log where date(alert_time)=date_sub(curdate(),interval
+		#{day} day);
+	</delete>
+    <delete id="deleteDate" parameterType="java.lang.String">
+		DELETE from sp_alert_log where alert_time BETWEEN #{topTime} and #{endTime}
+	</delete>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from sp_alert_log
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		sp_alert_log
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.mhtech.platform.msrv.pojo.AlertLog">
+		insert into sp_alert_log (id, server_id, param_name,
+		param_alias, alter_value, alert_time,
+		is_alerting, notify_id)
+		values
+		(#{id,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT},
+		#{paramName,jdbcType=VARCHAR},
+		#{paramAlias,jdbcType=VARCHAR},
+		#{alterValue,jdbcType=DECIMAL}, #{alertTime,jdbcType=TIMESTAMP},
+		#{isAlerting,jdbcType=BIT}, #{notifyId,jdbcType=BIGINT})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.AlertLog">
+		insert into sp_alert_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="serverId != null">
+				server_id,
+			</if>
+			<if test="paramName != null">
+				param_name,
+			</if>
+			<if test="paramAlias != null">
+				param_alias,
+			</if>
+			<if test="alterValue != null">
+				alter_value,
+			</if>
+			<if test="alertTime != null">
+				alert_time,
+			</if>
+			<if test="isAlerting != null">
+				is_alerting,
+			</if>
+			<if test="notifyId != null">
+				notify_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="serverId != null">
+				#{serverId,jdbcType=BIGINT},
+			</if>
+			<if test="paramName != null">
+				#{paramName,jdbcType=VARCHAR},
+			</if>
+			<if test="paramAlias != null">
+				#{paramAlias,jdbcType=VARCHAR},
+			</if>
+			<if test="alterValue != null">
+				#{alterValue,jdbcType=DECIMAL},
+			</if>
+			<if test="alertTime != null">
+				#{alertTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isAlerting != null">
+				#{isAlerting,jdbcType=BIT},
+			</if>
+			<if test="notifyId != null">
+				#{notifyId,jdbcType=BIGINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.AlertLog">
+		update sp_alert_log
+		<set>
+			<if test="serverId != null">
+				server_id = #{serverId,jdbcType=BIGINT},
+			</if>
+			<if test="paramName != null">
+				param_name = #{paramName,jdbcType=VARCHAR},
+			</if>
+			<if test="paramAlias != null">
+				param_alias = #{paramAlias,jdbcType=VARCHAR},
+			</if>
+			<if test="alterValue != null">
+				alter_value = #{alterValue,jdbcType=DECIMAL},
+			</if>
+			<if test="alertTime != null">
+				alert_time = #{alertTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isAlerting != null">
+				is_alerting = #{isAlerting,jdbcType=BIT},
+			</if>
+			<if test="notifyId != null">
+				notify_id = #{notifyId,jdbcType=BIGINT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.AlertLog">
+		update sp_alert_log
+		set server_id =
+		#{serverId,jdbcType=BIGINT},
+		param_name =
+		#{paramName,jdbcType=VARCHAR},
+		param_alias =
+		#{paramAlias,jdbcType=VARCHAR},
+		alter_value =
+		#{alterValue,jdbcType=DECIMAL},
+		alert_time =
+		#{alertTime,jdbcType=TIMESTAMP},
+		is_alerting =
+		#{isAlerting,jdbcType=BIT}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="countAlertLogs" resultType="int"
+		parameterType="com.mhtech.platform.msrv.pojo.AlertLogVO">
+		select
+		count(*)
+		from sp_alert_log
+		where 1 = 1
+		<if test="serverId != null">
+			and server_id = #{serverId,jdbcType=BIGINT}
+		</if>
+		<if test="paramName != null">
+			and param_name = #{paramName,jdbcType=VARCHAR}
+		</if>
+		<if test="paramAlias != null">
+			and param_alias = #{paramAlias,jdbcType=VARCHAR}
+		</if>
+		<if test="alterValue != null">
+			and alter_value = #{alterValue,jdbcType=DECIMAL}
+		</if>
+		<if test="startAlertTime != null &amp;&amp; endAlertTime != null ">
+			and alert_time between #{startAlertTime,jdbcType=TIMESTAMP} and
+			#{endAlertTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="isAlerting != null">
+			and is_alerting = #{isAlerting,jdbcType=BIT}
+		</if>
+	</select>
+	<select id="countGrpAlertLogs" resultMap="ServerAlertLogQtyMap"
+		parameterType="com.mhtech.platform.msrv.pojo.AlertLogVO">
+		select
+		server_id,
+		count(server_id) qty,
+		is_alerting
+		from sp_alert_log
+		where 1 = 1
+		<if test="startAlertTime != null &amp;&amp; endAlertTime != null ">
+			and alert_time between #{startAlertTime,jdbcType=TIMESTAMP} and
+			#{endAlertTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="isAlerting != null">
+			and is_alerting = #{isAlerting,jdbcType=BIT}
+		</if>
+		group by server_id
+	</select>
+	<select id="selectEntities" resultMap="ListResultMap"
+		parameterType="com.mhtech.platform.msrv.pojo.AlertLogVO">
+		select
+		<include refid="Base_Column_List" />
+		from sp_alert_log
+		where 1 = 1
+		<if test="serverId != null">
+			and server_id = #{serverId,jdbcType=BIGINT}
+		</if>
+		<if test="paramName != null">
+			and param_name = #{paramName,jdbcType=VARCHAR}
+		</if>
+		<if test="paramAlias != null">
+			and param_alias = #{paramAlias,jdbcType=VARCHAR}
+		</if>
+		<if test="alterValue != null">
+			and alter_value = #{alterValue,jdbcType=DECIMAL}
+		</if>
+		<if test="startAlertTime != null &amp;&amp; endAlertTime != null ">
+			and alert_time between #{startAlertTime,jdbcType=TIMESTAMP} and
+			#{endAlertTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="alertTime != null ">
+			and alert_time = #{alertTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="isAlerting != null">
+			and is_alerting = #{isAlerting,jdbcType=BIT}
+		</if>
+	</select>
+
+	<!-- 告警统计，细分告警类型 -->
+	<select id="totalParamAlert" resultMap="TypeAlertMap"
+		parameterType="com.mhtech.platform.msrv.pojo.TypeAlter">
+		SELECT t.type_alias param_name, sum(if(l.id is null, 0, 1)) count from sp_param_alert_type t
+			left join sp_param_alert a ON t.type_code = a.alert_code AND a.`status` = 10
+			left join sp_alert_log l on l.param_name = a.param_name 
+				<if test="startAlertTime != null &amp;&amp; endAlertTime != null ">
+					and l.alert_time between
+					#{startAlertTime,jdbcType=TIMESTAMP} and
+					#{endAlertTime,jdbcType=TIMESTAMP}
+				</if>
+				and l.is_alerting = #{isAlerting,jdbcType=BIT} AND a.`status` = 10
+		where 1 = 1
+			<if test="types != null &amp;&amp; types.size &gt; 0">
+				and t.type_code IN
+				<foreach collection="types" item="type" open="(" close=")"
+					separator=",">
+					#{type}
+				</foreach>
+			</if>
+			GROUP BY t.type_alias
+	</select>
+
+	<!-- 告警类型占比统计 -->
+	<select id="totalRateParamAlert" resultMap="TypeAlertMap"
+		parameterType="com.mhtech.platform.msrv.pojo.TypeAlter">
+		SELECT st.type_code, st.type_alias param_name, sum(if(l.id is null, 0, 1)) count from sp_param_alert_type st
+			left join sp_param_alert_type t on t.parent_code = st.type_code
+			left join sp_param_alert a ON a.alert_code = t.type_code AND a.`status` = 10 
+			left join sp_alert_log l on l.param_name = a.param_name 
+				<if test="startAlertTime != null &amp;&amp; endAlertTime != null ">
+					and l.alert_time between
+					#{startAlertTime,jdbcType=TIMESTAMP} and
+					#{endAlertTime,jdbcType=TIMESTAMP}
+				</if>
+			 AND l.is_alerting = #{isAlerting,jdbcType=BIT}
+		where 1 = 1 
+			<if test="types != null &amp;&amp; types.size &gt; 0">
+				and st.type_code IN
+				<foreach collection="types" item="type" open="(" close=")"
+					separator=",">
+					#{type}
+				</foreach>
+			</if>
+			GROUP BY st.type_code, st.type_alias
+	</select>
+
+	<select id="count" resultType="int"
+		parameterType="com.mhtech.platform.msrv.pojo.AlertLogVO">
+		select
+		count(*)
+		from sp_alert_log
+		where 1 = 1
+		<if test="serverId != null">
+			and server_id = #{serverId,jdbcType=BIGINT}
+		</if>
+		<if test="paramName != null">
+			and param_name = #{paramName,jdbcType=VARCHAR}
+		</if>
+		<if test="paramAlias != null">
+			and param_alias = #{paramAlias,jdbcType=VARCHAR}
+		</if>
+		<if test="alterValue != null">
+			and alter_value = #{alterValue,jdbcType=DECIMAL}
+		</if>
+		<if test="startAlertTime != null &amp;&amp; endAlertTime != null ">
+			and alert_time between #{startAlertTime,jdbcType=TIMESTAMP} and
+			#{endAlertTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="isAlerting != null">
+			and is_alerting = #{isAlerting,jdbcType=BIT}
+		</if>
+		<if test="notifyId != null">
+			and notify_id = #{notifyId,jdbcType=BIGINT}
+		</if>
+	</select>
+	<update id="batchUpdate" parameterType="list">
+		update sp_alert_log set is_alerting = 1 where id in
+		<foreach item="obj" collection="list" open="(" separator=","
+			close=")">
+			#{obj.id,jdbcType=BIGINT}
+		</foreach>
+	</update>
+</mapper>

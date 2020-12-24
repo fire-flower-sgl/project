@@ -1,0 +1,28 @@
+spring.profiles.active=monitor
+
+database.type=mysql
+
+pageNo=1
+pageSize=10
+
+superManagerNo='0001'
+
+host= smtp.exmail.qq.com
+protocol= smtp
+port= 465
+
+#短信发送配置
+#旧
+SmsSend.url=http://223.223.179.37:8080/eums/sms/utf8/send.do
+SmsSend.name=80035
+SmsSend.pwd=szvg47k2
+SmsSend.signature=【浙江墨煌信息科技有限公司】
+#新
+Smsurl=http://39.184.143.33:8088/MobileApi/apiNew/APIsendSms
+#102测试
+#customerId= 13036ecd2d2845ad
+#本地测试
+customerId=dbfdac7f5e684c80
+signature=【浙江墨煌科技有限公司】
+
+

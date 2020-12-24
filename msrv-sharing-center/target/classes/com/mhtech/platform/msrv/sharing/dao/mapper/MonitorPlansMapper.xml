@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.mhtech.platform.msrv.sharing.dao.mapper.MonitorPlansMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.MonitorPlans">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="task_name" jdbcType="VARCHAR"
+			property="taskName" />
+		<result column="cron" jdbcType="VARCHAR" property="cron" />
+		<result column="main_class" jdbcType="VARCHAR"
+			property="mainClass" />
+		<result column="method" jdbcType="VARCHAR" property="method" />
+		<result column="status" jdbcType="BIT" property="status" />
+		<result column="params" jdbcType="VARCHAR" property="params" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+		<result column="created_time" jdbcType="TIMESTAMP"
+			property="createdTime" />
+	</resultMap>
+
+	<resultMap id="ListResultMap"
+		type="com.mhtech.platform.msrv.pojo.MonitorPlans">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="task_name" jdbcType="VARCHAR"
+			property="taskName" />
+		<result column="cron" jdbcType="VARCHAR" property="cron" />
+		<result column="main_class" jdbcType="VARCHAR"
+			property="mainClass" />
+		<result column="method" jdbcType="VARCHAR" property="method" />
+		<result column="status" jdbcType="BIT" property="status" />
+		<result column="params" jdbcType="VARCHAR" property="params" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+		<result column="created_time" jdbcType="TIMESTAMP"
+			property="createdTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, task_name, cron, main_class, method, status, params, memo,
+		created_time
+	</sql>
+	
+	
+	
+	<select id="allLog" resultMap="BaseResultMap" >
+		 SELECT * from sp_monitor_plans where id &lt;= #{max} and id &gt;= #{min} limit #{eachItem}; 
+	</select>
+	<select id="selectManMin" resultType="Map" parameterType="java.lang.String">
+	     select MAX(id) max,MIN(id) min,COUNT(id) size from  sp_monitor_plans where created_time BETWEEN #{topTime} and #{endTime}
+	</select>
+    <delete id="deleteDate" parameterType="java.lang.String">
+		DELETE from sp_monitor_plans where created_time BETWEEN #{topTime} and #{endTime}
+	</delete>
+	
+	
+	<select id="dayLog" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		SELECT * from sp_monitor_plans where date(created_time) = date_sub(curdate(),interval  #{day} day)
+	</select>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE from sp_monitor_plans where date(created_time)=date_sub(curdate(),interval
+		#{day} day);
+	</delete>
+	
+	
+	
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sp_monitor_plans
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey">
+		delete from sp_monitor_plans
+		where id in
+		<foreach collection="keys" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<insert id="insert"
+		parameterType="com.mhtech.platform.msrv.pojo.MonitorPlansDTO">
+		insert into sp_monitor_plans (id, task_name, cron,
+		main_class, method, status,
+		params, memo, created_time
+		)
+		values (#{id,jdbcType=BIGINT}, #{taskName,jdbcType=VARCHAR},
+		#{cron,jdbcType=VARCHAR},
+		#{mainClass,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{status,jdbcType=BIT},
+		#{params,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, now()
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.MonitorPlans">
+		insert into sp_monitor_plans
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="taskName != null">
+				task_name,
+			</if>
+			<if test="cron != null">
+				cron,
+			</if>
+			<if test="mainClass != null">
+				main_class,
+			</if>
+			<if test="method != null">
+				method,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="params != null">
+				params,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="createdTime != null">
+				created_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="taskName != null">
+				#{taskName,jdbcType=VARCHAR},
+			</if>
+			<if test="cron != null">
+				#{cron,jdbcType=VARCHAR},
+			</if>
+			<if test="mainClass != null">
+				#{mainClass,jdbcType=VARCHAR},
+			</if>
+			<if test="method != null">
+				#{method,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=BIT},
+			</if>
+			<if test="params != null">
+				#{params,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.MonitorPlans">
+		update sp_monitor_plans
+		<set>
+			<if test="taskName != null">
+				task_name = #{taskName,jdbcType=VARCHAR},
+			</if>
+			<if test="cron != null">
+				cron = #{cron,jdbcType=VARCHAR},
+			</if>
+			<if test="mainClass != null">
+				main_class = #{mainClass,jdbcType=VARCHAR},
+			</if>
+			<if test="method != null">
+				method = #{method,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=BIT},
+			</if>
+			<if test="params != null">
+				params = #{params,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				created_time = #{createdTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.mhtech.platform.msrv.pojo.MonitorPlansDTO">
+		update sp_monitor_plans
+		<set>
+			<if test="taskName != null">
+				task_name = #{taskName,jdbcType=VARCHAR},
+			</if>
+			<if test="cron != null">
+				cron = #{cron,jdbcType=VARCHAR},
+			</if>
+			<if test="mainClass != null">
+				main_class = #{mainClass,jdbcType=VARCHAR},
+			</if>
+			<if test="method != null">
+				method = #{method,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=BIT},
+			</if>
+			<if test="params != null">
+				params = #{params,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime == null">
+				created_time = now(),
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectEntities" resultMap="BaseResultMap"
+		parameterType="com.mhtech.platform.msrv.pojo.MonitorPlansDTO">
+		select
+		<include refid="Base_Column_List" />
+		from sp_monitor_plans
+		where 1 = 1
+		<if test="status != null">
+			and status = #{status,jdbcType=BIT}
+		</if>
+		<if test="taskName != null">
+			and task_name like
+			CONCAT('%',#{taskName,jdbcType=VARCHAR},'%')
+		</if>
+		order by created_time
+	</select>
+
+	<select id="isExist" resultType="int"
+		parameterType="com.mhtech.platform.msrv.pojo.MonitorPlansDTO">
+		select count(1) from sp_monitor_plans
+		where 1 = 1
+		<if test="taskName != null">
+			and task_name = #{taskName}
+		</if>
+		<if test="id != null">
+			and id != #{id}
+		</if>
+	</select>
+</mapper>

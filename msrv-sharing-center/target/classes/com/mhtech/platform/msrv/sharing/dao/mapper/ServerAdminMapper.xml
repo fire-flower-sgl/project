@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.ServerAdminMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.ServerAdmin">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="server_code" jdbcType="VARCHAR" property="serverCode" />
+		<result column="ip" jdbcType="VARCHAR" property="ip" />
+		<result column="server_name" jdbcType="VARCHAR" property="serverName" />
+		<result column="username" jdbcType="VARCHAR" property="username" />
+		<result column="email" jdbcType="VARCHAR" property="email" />
+		<result column="mobile" jdbcType="VARCHAR" property="mobile" />
+		<result column="parent_server" jdbcType="VARCHAR" property="parentServer" />
+		<result column="server_type" jdbcType="VARCHAR" property="serverType" />
+		<result column="apply_projects" jdbcType="VARCHAR" property="applyProjects" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+	</resultMap>
+	<resultMap id="DetailResultMap"
+		type="com.mhtech.platform.msrv.pojo.ServerAdminInfo">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="server_code" jdbcType="VARCHAR" property="serverCode" />
+		<result column="ip" jdbcType="VARCHAR" property="ip" />
+		<result column="server_name" jdbcType="VARCHAR" property="serverName" />
+		<result column="username" jdbcType="VARCHAR" property="username" />
+		<result column="email" jdbcType="VARCHAR" property="email" />
+		<result column="mobile" jdbcType="VARCHAR" property="mobile" />
+		<result column="parent_server" jdbcType="VARCHAR" property="parentServer" />
+		<result column="server_type" jdbcType="VARCHAR" property="serverType" />
+		<result column="apply_projects" jdbcType="VARCHAR" property="applyProjects" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+		<!--  
+		<collection property="subServers" notNullColumn ="sub_id">
+			<id column="sub_id" jdbcType="BIGINT" property="id" />
+			<result column="sub_server_code" jdbcType="VARCHAR" property="serverCode" />
+			<result column="sub_ip" jdbcType="VARCHAR" property="ip" />
+			<result column="sub_server_name" jdbcType="VARCHAR" property="serverName" />
+			<result column="sub_username" jdbcType="VARCHAR" property="username" />
+			<result column="sub_email" jdbcType="VARCHAR" property="email" />
+			<result column="sub_mobile" jdbcType="VARCHAR" property="mobile" />
+			<result column="sub_parent_server" jdbcType="BIGINT" property="parentServer" />
+			<result column="sub_server_type" jdbcType="SMALLINT" property="serverType" />
+			<result column="sub_apply_projects" jdbcType="VARCHAR" property="applyProjects" />
+			<result column="sub_status" jdbcType="VARCHAR" property="status" />
+			<result column="sub_created_time" jdbcType="TIMESTAMP" property="createdTime" />
+		</collection>
+		-->
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, server_code, ip, server_name, username, email, mobile, parent_server, server_type, apply_projects, status,
+		created_time
+	</sql>
+	<sql id="Detail_Column_List">
+		p.id, p.ip, p.server_code, p.server_name, p.username, p.email, p.mobile, b.name user,
+		p.parent_server,p.server_type, 
+		p.apply_projects, p.`status`, p.created_time, a.status as monitorStatus
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sp_server_admin
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from sp_server_admin
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	
+	<delete id="delById" parameterType="java.lang.Long">
+		delete from sp_server_admin
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	
+	<insert id="insert" parameterType="com.mhtech.platform.msrv.pojo.ServerInfo">
+		insert into sp_server_admin (id, server_code, ip, server_name,
+		username, email, mobile,
+		parent_server, apply_projects, status, created_time
+		)
+		values (#{id,jdbcType=VARCHAR}, #{serverCode,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR},
+		#{serverName,jdbcType=VARCHAR},
+		#{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
+		#{parentServer,jdbcType=VARCHAR},  #{applyProjects,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+		#{createdTime,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerAdmin">
+		insert into sp_server_admin
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="serverCode != null">
+				server_code,
+			</if>
+			<if test="ip != null">
+				ip,
+			</if>
+			<if test="serverName != null">
+				server_name,
+			</if>
+			<if test="username != null">
+				username,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="parentServer != null">
+				parent_server,
+			</if>
+			<if test="serverType != null">
+				server_type,
+			</if>
+			<if test="applyProjects != null">
+				apply_projects,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="createdTime != null">
+				created_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="serverCode != null">
+				#{serverCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ip != null">
+				#{ip,jdbcType=VARCHAR},
+			</if>
+			<if test="serverName != null">
+				#{serverName,jdbcType=VARCHAR},
+			</if>
+			<if test="username != null">
+				#{username,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="parentServer != null">
+				#{parentServer,jdbcType=BIGINT},
+			</if>
+			<if test="serverType != null">
+				#{serverType,jdbcType=SMALLINT},
+			</if>
+			<if test="applyProjects != null">
+				#{applyProjects,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=SMALLINT},
+			</if>
+			<if test="createdTime != null">
+				#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerAdmin">
+		update sp_server_admin
+		<set>
+			<if test="ip != null">
+				ip = #{ip,jdbcType=VARCHAR},
+			</if>
+			<if test="serverCode != null">
+				server_code = #{serverCode,jdbcType=VARCHAR},
+			</if>
+			<if test="serverName != null">
+				server_name = #{serverName,jdbcType=VARCHAR},
+			</if>
+			<if test="username != null">
+				username = #{username,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="parentServer != null">
+				parent_server = #{parentServer,jdbcType=BIGINT},
+			</if>
+			<if test="serverType != null">
+				server_type = #{serverType,jdbcType=SMALLINT},
+			</if>
+			<if test="applyProjects != null">
+				apply_projects = #{applyProjects,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=SMALLINT},
+			</if>
+			<if test="createdTime != null">
+				created_time = #{createdTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.pojo.ServerInfo">
+		update sp_server_admin
+		set ip = #{ip,jdbcType=VARCHAR},
+		server_name = #{serverName,jdbcType=VARCHAR},
+		username = #{username,jdbcType=VARCHAR},
+		email = #{email,jdbcType=VARCHAR},
+		mobile = #{mobile,jdbcType=VARCHAR},
+		parent_server = #{parentServer,jdbcType=VARCHAR},
+		apply_projects = #{applyProjects,jdbcType=VARCHAR},
+		status = #{status,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<select id="selectEntities"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerAdmin"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sp_server_admin
+		where 1 = 1
+		<if test="ip != null">
+			and ip = #{ip,jdbcType=VARCHAR}
+		</if>
+		<if test="serverCode != null">
+			and server_code = #{serverCode,jdbcType=VARCHAR}
+		</if>
+		<if test="serverName != null">
+			and server_name = #{serverName,jdbcType=VARCHAR}
+		</if>
+		<if test="username != null">
+			and username = #{username,jdbcType=VARCHAR}
+		</if>
+		<if test="email != null">
+			and email = #{email,jdbcType=VARCHAR}
+		</if>
+		<if test="mobile != null">
+			and mobile = #{mobile,jdbcType=VARCHAR}
+		</if>
+		<if test="parentServer != null">
+			and parent_server = #{parentServer,jdbcType=BIGINT}
+		</if>
+		<if test="serverType != null">
+			and server_type = #{serverType,jdbcType=SMALLINT}
+		</if>
+		<if test="applyProjects != null">
+			and apply_projects = #{applyProjects,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			and status = #{status,jdbcType=SMALLINT}
+		</if>
+	</select>
+	
+	<select id="findServerDetail" resultMap="DetailResultMap">
+		select
+			p.id, p.ip, p.server_name, p.server_code, p.username, p.email, p.mobile, 
+			p.parent_server, p.status, p.created_time ,
+			s.id sub_id, s.ip sub_ip, s.server_name sub_server_name, s.username sub_username, 
+			s.email sub_email, s.mobile sub_email, s.parent_server sub_parent_server, 
+			s.status, s.created_time sub_created_time
+		from sp_server_admin p
+			left join sp_server_admin s on s.server_code = p.parent_server
+		where p.id = #{id}
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="listServerAdmin" parameterType="com.mhtech.platform.msrv.pojo.ServerPageInfo" resultMap="DetailResultMap">
+		select
+		<include refid="Detail_Column_List" />
+		from sp_server_admin p
+			left join sp_device_admin a on p.ip = a.ip
+			left join sp_user b on b.user_code = p.username
+		where 1 = 1
+		<if test="serverName != null">
+			and p.server_name like CONCAT('%', #{serverName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="username != null">
+			and p.username like CONCAT('%', #{username,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="serverType != null">
+			and p.server_type = #{serverType,jdbcType=SMALLINT}
+		</if>
+		<if test="applyProjects != null">
+			and p.apply_projects like CONCAT('%', #{applyProjects,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="status != null">
+			and p.status = #{status,jdbcType=SMALLINT}
+		</if>
+		<if test="monitorStatus != null">
+			and a.status = #{monitorStatus,jdbcType=SMALLINT}
+		</if>
+	</select>
+		
+	<select id="findServerByServerId" parameterType="long" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sp_server_admin
+		where server_code = #{serverId,jdbcType=BIGINT}
+	</select>
+	
+	<select id="getServerList" resultMap="BaseResultMap">
+		SELECT concat(id,'') id ,server_name from sp_server_admin ORDER BY server_name 
+	</select>
+
+	<!--只显可使用的服务-->
+	<select id="getServerListForTrue" resultMap="BaseResultMap">
+		SELECT concat(id,'') id ,server_name from sp_server_admin WHERE status = 1 ORDER BY server_name
+	</select>
+	
+	<!-- 根据服务名称模糊查询服务 -->
+	<select id="findServerInfoByServerName" resultType="java.util.HashMap" >
+	    select server_code as code ,server_name value
+	    from sp_server_admin 
+	    where 1=1 
+	    <if test="serverName != null" >
+	    	and server_name like '%${serverName}%'
+	    </if>
+	</select>
+	
+	<!-- 根据服务名称模糊查询服务id列表 -->
+	<select id="findServerInfoByServerNameForId" resultType="java.util.HashMap" >
+	    select CONCAT(id,'') as code ,server_name value
+	    from sp_server_admin 
+	    where 1=1 
+	    <if test="serverName != null" >
+	    	and server_name like '%${serverName}%'
+	    </if>
+	</select>
+	
+	<delete id="deleteByIds" parameterType="list" >
+		delete from sp_server_admin
+		where id in 
+		<foreach collection="list" item="list" open="("  separator=","  close=")">
+		  	#{list}
+		</foreach> 
+	</delete>
+	
+	
+</mapper>

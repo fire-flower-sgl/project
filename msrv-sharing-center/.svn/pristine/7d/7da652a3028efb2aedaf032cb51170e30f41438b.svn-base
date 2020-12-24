@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mhtech.platform.msrv.sharing.dao.mapper.GatewayAccessLogMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.GatewayAccessLog">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="ip" property="ip" jdbcType="VARCHAR" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="params" property="params" jdbcType="VARCHAR" />
+		<result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="request_body" property="requestBody" jdbcType="LONGVARCHAR" />
+		<result column="response_body" property="responseBody" jdbcType="LONGVARBINARY" />
+		
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.mhtech.platform.msrv.sharing.dao.model.GatewayAccessLog"
+		extends="BaseResultMap">
+		<result column="request_body" property="requestBody" jdbcType="LONGVARBINARY" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, ip, url, params, created_time
+	</sql>
+	<sql id="Blob_Column_List">
+		request_body,response_body
+	</sql>
+	
+	
+	<select id="allLog" resultMap="BaseResultMap" >
+		SELECT * from sys_gateway_access_log where id &lt;= #{max} and id &gt;= #{min} limit #{eachItem}; 
+	</select>
+	
+	<select id="selectManMin" resultType="Map" parameterType="java.lang.String">
+	    select MAX(id) max,MIN(id) min,COUNT(id) size from  sys_gateway_access_log where created_time BETWEEN #{topTime} and #{endTime}
+	</select>
+	
+    <delete id="deleteDate" parameterType="java.lang.String">
+		DELETE from sys_gateway_access_log where created_time BETWEEN #{topTime} and #{endTime}
+	</delete>
+	
+	
+	<select id="selectLog" resultMap="BaseResultMap" parameterType="com.mhtech.platform.log.pojo.GatewayAccessLogDTO">
+		SELECT * from sys_gateway_access_log
+		<where>
+			<if test="requestBody!=null"> request_body like '%${requestBody}%' </if>
+			<if test="id!=null">and id=#{id}</if>
+			<if test="ip!=null">and ip=#{ip}</if>
+			<if test="url!=null">and url=#{url}</if>
+			<if test="params!=null">and params=#{params}</if>
+			<if test="topTime!=null">  and created_time &gt;=#{topTime} </if>
+			<if test="endTime!=null">  and created_time &lt; =#{endTime} </if>
+		</where>
+	</select>
+	<select id="selectLogSum" resultType="java.lang.Integer" parameterType="com.mhtech.platform.log.pojo.GatewayAccessLogDTO">
+		SELECT COUNT(id) from sys_gateway_access_log
+		<where>
+			<if test="requestBody!=null"> request_body like '%${requestBody}%' </if>
+			<if test="id!=null">and id=#{id}</if>
+			<if test="ip!=null">and ip=#{ip}</if>
+			<if test="url!=null">and url=#{url}</if>
+			<if test="params!=null">and params=#{params}</if>
+			<if test="topTime!=null">  and created_time &gt;=#{topTime} </if>
+			<if test="endTime!=null">  and created_time &lt; =#{endTime} </if>
+		</where>
+	</select>
+	
+	 
+   <delete id="delete" parameterType="java.lang.Integer" >
+     DELETE from  sys_gateway_access_log where date(created_time)=date_sub(curdate(),interval #{day} day)
+   </delete>
+  
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from sys_gateway_access_log
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from sys_gateway_access_log
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.GatewayAccessLog">
+		insert into sys_gateway_access_log (id, ip, url, params,
+		created_time, request_body)
+		values (#{id,jdbcType=BIGINT}, #{ip,jdbcType=VARCHAR},
+		#{url,jdbcType=VARCHAR}, #{params,jdbcType=VARCHAR},
+		#{createdTime,jdbcType=TIMESTAMP},
+		#{requestBody,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.GatewayAccessLog">
+		insert into sys_gateway_access_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="ip != null">
+				ip,
+			</if>
+			<if test="url != null">
+				url,
+			</if>
+			<if test="params != null">
+				params,
+			</if>
+			<if test="createdTime != null">
+				created_time,
+			</if>
+			<if test="requestBody != null">
+				request_body,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="ip != null">
+				#{ip,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=VARCHAR},
+			</if>
+			<if test="params != null">
+				#{params,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="requestBody != null">
+				#{requestBody,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.GatewayAccessLog">
+		update sys_gateway_access_log
+		<set>
+			<if test="ip != null">
+				ip = #{ip,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				url = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="params != null">
+				params = #{params,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				created_time = #{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="requestBody != null">
+				request_body = #{requestBody,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.GatewayAccessLog">
+		update sys_gateway_access_log
+		set ip = #{ip,jdbcType=VARCHAR},
+		url = #{url,jdbcType=VARCHAR},
+		params = #{params,jdbcType=VARCHAR},
+		created_time = #{createdTime,jdbcType=TIMESTAMP},
+		request_body = #{requestBody,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.GatewayAccessLog">
+		update sys_gateway_access_log
+		set ip = #{ip,jdbcType=VARCHAR},
+		url = #{url,jdbcType=VARCHAR},
+		params = #{params,jdbcType=VARCHAR},
+		created_time = #{createdTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectEntities" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from sys_gateway_access_log
+	</select>
+	
+	<insert id="batchInsert" parameterType="list">
+		insert into sys_gateway_access_log (id,ip,url,params,created_time,request_body,response_body) values 
+		<foreach collection="list" item="gal" separator="," >
+			(#{gal.id,jdbcType=BIGINT},#{gal.ip,jdbcType=VARCHAR},#{gal.url,jdbcType=VARCHAR},#{gal.params,jdbcType=VARCHAR},#{gal.createdTime,jdbcType=TIMESTAMP},#{gal.requestBody,jdbcType=LONGVARCHAR},#{gal.responseBody,jdbcType=LONGVARBINARY})
+		</foreach>
+	</insert>
+	
+	<select id="selectTodayLogByApplication" resultMap="BaseResultMap" parameterType="list">
+		select
+		<include refid="Base_Column_List" />,<include refid="Blob_Column_List" />
+		from sys_gateway_access_log where id in ( 
+			SELECT DISTINCT trace_id from sys_msrv_log where created_time BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59') 
+			and application in 
+			<foreach collection="list" item="name" open="(" separator="," close=")" >
+				#{name}
+			</foreach>
+			)
+	</select>
+	
+	<select id="selectLogByServerId" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />,<include refid="Blob_Column_List" />
+		from sys_gateway_access_log where id in ( 
+			SELECT DISTINCT trace_id from sys_msrv_log where created_time BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59') 
+			and application = (
+					SELECT server_name from sp_server_admin  where server_code = #{params.serverId} and status = 10
+					) 
+			) 
+			<if test="params.id != null">
+				and id &gt; #{params.id}
+			</if>
+			<if test="params.limit != null">
+				ORDER BY id LIMIT #{params.limit}
+			</if>
+	</select>
+</mapper>

@@ -1,0 +1,38 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="${dubbo.application.name}"/>
+
+    <!-- 使用multicast广播注册中心暴露服务地址 -->
+    <dubbo:registry address="zookeeper://${zookeeper.host}:${zookeeper.port}"/>
+
+    <!-- 用dubbo协议在20880端口暴露服务 -->
+    <dubbo:protocol name="${dubbo.provider.name}" port="${dubbo.provider.port}" threadpool="${dubbo.protocol.threadpool}" threads="${dubbo.protocol.threads}" dispatcher="${dubbo.dispatcher.type}" />
+
+    <!-- service  group="" version=""-->
+    <dubbo:service group="${group}" version="${version}" interface="com.mhtech.platform.msrv.auth.service.ISpUserService" ref="iSpUserService" loadbalance="${dubbo.provider.loadbalance}" />
+    <dubbo:service group="${group}" version="${version}" interface="com.mhtech.platform.msrv.auth.service.IPowerService" ref="iPowerService" loadbalance="${dubbo.provider.loadbalance}" />
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.service.IBlackIpsService" ref="iblackIpsService" loadbalance="${dubbo.provider.loadbalance}" />
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.service.AcceccTimeService" ref="acceccTimeService" loadbalance="${dubbo.provider.loadbalance}" />
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.service.ActionLogService" ref="actionLogService" loadbalance="${dubbo.provider.loadbalance}" />
+    <dubbo:reference id="iworkService" interface="com.mhtech.platform.msrv.auth.service.IworkService" timeout="${dubbo.provider.timeout}" check="${dubbo.provider.check}" retries="${dubbo.provider.retries}" />	 
+    <!-- 公共用户，权限相关 -->
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.login.service.UserService" ref="loginUserService" loadbalance="${dubbo.provider.loadbalance}" />
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.login.service.UserPowerService" ref="loginUserPowerService" loadbalance="${dubbo.provider.loadbalance}" />
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.login.service.EmailService" ref="loginEmailService" loadbalance="${dubbo.provider.loadbalance}" />
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.login.service.OrgFuncService" ref="loginOrgFuncService" loadbalance="${dubbo.provider.loadbalance}" />
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.login.service.SysPowerService" ref="loginSysPowerService" loadbalance="${dubbo.provider.loadbalance}" />
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.login.service.SysRoleService" ref="loginSysRoleService" loadbalance="${dubbo.provider.loadbalance}" />
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.login.service.SpUserService" ref="loginSpUserService" loadbalance="${dubbo.provider.loadbalance}" />
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.login.service.SMSService" ref="loginSMSService" loadbalance="${dubbo.provider.loadbalance}" />
+    
+    
+    <!-- 提供者  缓存日志 过滤器 -->
+    <dubbo:provider  filter="ProvideLogFilter"/> 
+    <!-- 消费者  存日志 过滤器-->
+    <dubbo:consumer filter="ConsumptionLogFilter"/> 
+</beans>

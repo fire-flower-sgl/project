@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.auth.dao.mapper.SysBlackListMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.auth.dao.model.SysBlackList" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="is_locked" property="isLocked" jdbcType="INTEGER" />
+    <result column="locked_time" property="lockedTime" jdbcType="TIMESTAMP" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ip, memo, is_locked, locked_time, created_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_black_list
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_black_list
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysBlackList" >
+    insert into sys_black_list (id, ip, memo, 
+      is_locked, locked_time, created_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
+      #{isLocked,jdbcType=INTEGER}, #{lockedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysBlackList" >
+    insert into sys_black_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="isLocked != null" >
+        is_locked,
+      </if>
+      <if test="lockedTime != null" >
+        locked_time,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="isLocked != null" >
+        #{isLocked,jdbcType=INTEGER},
+      </if>
+      <if test="lockedTime != null" >
+        #{lockedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysBlackList" >
+    update sys_black_list
+    <set >
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="isLocked != null" >
+        is_locked = #{isLocked,jdbcType=INTEGER},
+      </if>
+      <if test="lockedTime != null" >
+        locked_time = #{lockedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysBlackList" >
+    update sys_black_list
+    set ip = #{ip,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      is_locked = #{isLocked,jdbcType=INTEGER},
+      locked_time = #{lockedTime,jdbcType=TIMESTAMP},
+      created_time = #{createdTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap" >
+   		    select 
+    <include refid="Base_Column_List" />
+    	from sys_black_list where is_locked = 1
+  </select>
+  
+</mapper>

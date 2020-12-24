@@ -1,0 +1,42 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="${dubbo.application.name}"/>
+
+    <!-- 使用multicast广播注册中心暴露服务地址 -->
+    <dubbo:registry address="zookeeper://${zookeeper.host}:${zookeeper.port}"/>
+   
+
+    <!-- 用dubbo协议在20880端口暴露服务 -->
+    <dubbo:protocol name="${dubbo.protocol}" port="${dubbo.port}"/>
+
+    <!-- service -->
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.service.IworkService" ref="iworkService" />
+    <dubbo:service interface="com.mhtech.platform.msrv.auth.service.ServerChkRuleService" ref="serverChkRuleService" />
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.IParamAlertService" ref="iParamAlertService" />
+
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.IServerAlertRuleService" ref="serverAlertRuleService" />
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.IServerAdminService" ref="serverAdminService" />
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.IServerMonitorLog" ref="serverMonitorLog" />	
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.IAlertLogService" ref="alertLogService" />	
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.IServerNotifyLogService" ref="serverNotifyLogService" />	
+  
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.IAlertNotifyTmplService" ref="alertNotifyTmplService" />
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.IServerNotifyRuleService" ref="serverNotifyRuleService" />
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.ISpSpersonneService" ref="iSpSpersonneService" />
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.IMonitorPlansService" ref="monitorPlansService" />
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.IHardwareTypeService" ref="hardwareTypeService" />
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.IPropertyService" ref="propertyService" />   
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.IServerDiagramService" ref="serverDiagramService" />   
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.ISysParameterService" ref="iSysParameterService" />   
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.SpDeviceAdminService" ref="spDeviceAdminService" />   
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.TaskService" ref="taskService" /> 
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.SpAlertNotifyTmplService" ref="spAlertNotifyTmplService" />  
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.SpParamAlertService" ref="spParamAlertService" />  
+    <dubbo:service interface="com.mhtech.platform.msrv.monitor.service.SpAlertModelService" ref="spAlertModelService" />  
+    
+</beans>

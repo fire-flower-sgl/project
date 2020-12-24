@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.auth.dao.mapper.SysPowerMapper">
+	<resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.auth.dao.model.SysPower">
+		<result column="id" property="id" jdbcType="BIGINT" />
+		<result column="power_num" property="powerNum" jdbcType="VARCHAR" />
+		<result column="power_name" property="powerName" jdbcType="VARCHAR" />
+		<result column="power_module" property="powerModule" jdbcType="VARCHAR" />
+		<result column="power_type" property="powerType" jdbcType="VARCHAR" />
+		<result column="power_father" property="powerFather" jdbcType="VARCHAR" />
+		<result column="power_level" property="powerLevel" jdbcType="VARCHAR" />
+		<result column="remote_url" property="remoteUrl" jdbcType="VARCHAR" />
+		<result column="is_use" property="isUse" jdbcType="VARCHAR" />
+		<result column="power_update_time" property="powerUpdateTime" jdbcType="TIMESTAMP" />
+		<result column="special_power_key" property="specialPowerKey" jdbcType="VARCHAR" />
+		<result column="special_power_value" property="specialPowerValue" jdbcType="VARCHAR" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="icon" property="icon" jdbcType="VARCHAR" />
+		<result column="src" property="src" jdbcType="VARCHAR" />			
+		<result column="powerTypeVal" property="powerTypeVal" jdbcType="VARCHAR" />
+		<result column="powerLevelVal" property="powerLevelVal" jdbcType="VARCHAR" />
+		<result column="fatherPowerName" property="fatherPowerName" jdbcType="VARCHAR" />
+	
+		  
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, power_num, power_name, power_module, power_type, power_father, power_level, is_use, power_update_time, special_power_key, 
+		special_power_value,url,icon,src
+	</sql>
+	
+	
+	<!-- 查询用户的所有权限 -->
+	<select id="listAllPower" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT distinct power_num powerNum ,powerName , powerFather,powerType,src,icon,url
+		from (SELECT f.id, b.`user_code` userCode,c.role_name roleName, f.power_name powerName, url,src,icon,f.power_num,f.power_father powerFather,f.power_type powerType 
+		from sys_user_role b
+		LEFT JOIN sys_role c ON b.role_num=c.role_num  
+		LEFT JOIN sys_role_power d on c.role_num=d.role_num 
+		LEFT JOIN sys_power f ON f.power_num=d.power_num where b.`user_code`=#{userCode} and f.is_use='1'
+		) k ORDER BY id
+    </select>
+	
+	
+	<select id="listPower" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT distinct power_num ,powerName , powerFather,powerType,src,icon 
+		from (SELECT f.id, b.`user_code` userCode,c.role_name roleName, f.power_name powerName, src,icon,f.power_num,f.power_father powerFather,f.power_type powerType 
+		from sys_user_role b
+		LEFT JOIN sys_role c ON b.role_num=c.role_num  
+		LEFT JOIN sys_role_power d on c.role_num=d.role_num 
+		LEFT JOIN sys_power f ON f.power_num=d.power_num where b.`user_code`=#{userCode} and  f.power_type in ('menu','html') and f.is_use='1'
+		) k ORDER BY id
+    </select>
+	
+	
+	
+	
+	
+
+	<select id="listMenuHtmlBtn" resultMap="BaseResultMap" >
+		SELECT id,power_num,power_name,power_father,power_type from sys_power  where power_type in('menu','html','btn') and is_use='1' 
+		 ORDER BY power_type desc
+	</select>
+	
+	<select id="powerNum" resultType="boolean" parameterType="java.lang.String" >
+         <![CDATA[  SELECT COUNT(1) from sys_power where  power_num=#{powerNum} ]]>
+    </select>
+	
+	<!-- 查询html权限下可用的btn权限-->
+	<select id="listBtnSpecial" resultMap="BaseResultMap" parameterType="com.mhtech.platform.msrv.pojo.UserPowerDTO" >
+       SELECT  distinct a.power_num power_num,url from  (SELECT * from sys_power where power_father=#{userPowerParams.powerNum} and is_use='1') a
+		LEFT JOIN  sys_role_power b on a.power_num=b.power_num  
+		LEFT JOIN  sys_role c ON b.role_num=c.role_num 
+		LEFT JOIN  sys_user_role d on d.role_num=c.role_num 
+		where  c.role_num in (SELECT distinct role_num from sys_user_role where user_code=#{userPowerParams.userCode})	
+    </select>
+	
+	<select id="selectSysPower" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		SELECT c.id id,c.power_name,c.power_num,c.power_module,c.is_use,c.power_update_time,c.powerTypeVal,c.power_type
+		,f.parm_name powerLevelVal,c.power_level powerLevel,c.power_father,d.power_name fatherPowerName
+		,c.url,c.src,c.icon  from  
+		(select a.*,parm_name powerTypeVal from sys_power a LEFT JOIN sys_parameter b on
+		a.power_type=b.parm_code and parm_type='powerType' and parm_status = '1')c 
+		LEFT JOIN sys_parameter f ON c.power_level=f.parm_code and f.parm_status = '1' 
+		and parm_type='powerLevel' LEFT JOIN sys_power d on c.power_father=d.power_num where c.id=#{id}
+	</select>
+	
+	
+
+	<update id="updataSysPowerId"  parameterType="java.lang.Long">
+     update sys_power    
+     <set>
+           <if test="icon != null">
+				icon = #{icon},
+			</if>
+			<if test="isUse != null">
+				 is_use = #{isUse},
+			</if>
+			power_update_time = now(),
+			<if test="powerFather != null">
+				power_father = #{powerFather},
+			</if>
+			<if test="src != null">
+				 src = #{src},
+			</if>
+			<if test="powerLevel != null">
+				power_level = #{powerLevel},
+			</if>
+			<if test="powerModule != null">
+				power_module = #{powerModule},
+			</if>
+			<if test="powerType != null">
+				power_type = #{powerType},
+			</if>	
+			<if test="powerNum != null">
+				 power_num= #{powerNum},
+			</if>
+			<if test="powerName != null">
+				power_name = #{powerName},
+			</if>
+			<if test="specialPowerKey != null">
+				special_power_key = #{specialPowerKey},
+			</if>
+			<if test="specialPowerValue != null">
+				 special_power_value= #{specialPowerValue},
+			</if>
+			<if test="url != null">
+				url = #{url},
+			</if>
+		</set>
+     where id = #{id,jdbcType=BIGINT}
+  </update>
+	
+	
+	
+  <delete id="delectPowerNumPower" parameterType="java.lang.String" >
+      DELETE  from sys_power where power_num=#{powerNum} and is_use='0'
+  </delete>
+	
+	
+	
+	
+	
+	
+	<select id="listRolePower" resultMap="BaseResultMap" parameterType="java.lang.String">
+		 SELECT c.power_num from sys_role a 
+		 LEFT JOIN sys_role_power b on a.role_num=b.role_num 
+		 LEFT JOIN sys_power c on b.power_num=c.power_num
+		 where  a.role_num=#{roleNum} and  c.is_use='1'and c.is_use='1'
+	</select>
+	
+	<!-- 查询分页 -->
+	<select id="listSysPower" resultMap="BaseResultMap"  parameterType="com.mhtech.platform.msrv.pojo.UserPowerDTO">	
+		SELECT c.id id,c.power_name,c.power_num,c.power_module,c.is_use,c.power_update_time,c.powerTypeVal,c.power_type
+		,f.parm_name powerLevelVal,c.power_level powerLevel,c.power_father,d.power_name fatherPowerName
+		,c.url,c.src,c.icon  from  
+		(select a.*,parm_name powerTypeVal from sys_power a LEFT JOIN sys_parameter b on
+		a.power_type=b.parm_code and parm_type='powerType' and parm_status = '1')c 
+		LEFT JOIN sys_parameter f ON c.power_level=f.parm_code and f.parm_status = '1' 
+		and parm_type='powerLevel' LEFT JOIN sys_power d on c.power_father=d.power_num 
+		where 1=1
+		 <if test=" userPowerParams.powerNum !=null  ">
+	       and c.power_name LIKE CONCAT('%',#{userPowerParams.powerNum},'%') 
+	       or  c.power_num like CONCAT('%',#{userPowerParams.powerNum},'%')
+	    </if>
+	</select>
+	<!-- 查询分页总条数 -->
+	<select id="count" resultType="java.lang.Integer"  parameterType="com.mhtech.platform.msrv.pojo.UserPowerDTO">	
+		SELECT COUNT(c.id) from  
+		(select a.*,parm_name powerTypeVal from sys_power a LEFT JOIN sys_parameter b on
+		a.power_type=b.parm_code and parm_type='powerType' and parm_status = '1')c 
+		LEFT JOIN sys_parameter f ON c.power_level=f.parm_code and f.parm_status = '1' 
+		and parm_type='powerLevel' LEFT JOIN sys_power d on c.power_father=d.power_num 
+		where 1=1
+		 <if test=" userPowerParams.powerNum !=null  ">
+	       and c.power_name LIKE CONCAT('%',#{userPowerParams.powerNum},'%') 
+	       or  c.power_num like CONCAT('%',#{userPowerParams.powerNum},'%')
+	    </if>
+	</select>
+	
+	
+	
+	
+	
+    <select id="selectHtmlMenu" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT  distinct a.power_num power_num from  (SELECT * from sys_power where power_type='menu' or  power_type='html') a
+		LEFT JOIN  sys_role_power b on a.power_num=b.power_num  
+		LEFT JOIN  sys_role c ON b.role_num=c.role_num 
+		LEFT JOIN  sys_user_role d on d.role_num=c.role_num 
+		where  c.role_num in (SELECT distinct role_num from sys_user_role where user_code=#{userCode})		
+	</select>
+	
+	
+	
+	
+	<select id="selectPowerNumUrl" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT  distinct a.power_num power_num,a.url url from  (SELECT * from sys_power) a
+		LEFT JOIN  sys_role_power b on a.power_num=b.power_num  
+		LEFT JOIN  sys_role c ON b.role_num=c.role_num 
+		LEFT JOIN  sys_user_role d on d.role_num=c.role_num 
+		where  c.role_num in(SELECT distinct role_num from sys_user_role where user_code=#{userCode}) order by a.id
+		
+	</select>
+	
+	<select id="findSysPowerOne" resultType="boolean" parameterType="com.mhtech.platform.msrv.pojo.UserPowerDTO">
+		 <![CDATA[ SELECT COUNT(1) from sys_power where  power_num=#{userPowerParams.powerNum} ]]>
+	</select>
+	
+	<select id="listDataPower" resultMap="BaseResultMap" >
+		SELECT * from sys_power where power_type='data'
+	</select>
+	
+	<select id="selectPowerFatherUrl" resultMap="BaseResultMap" parameterType="java.lang.String">
+		 SELECT  distinct url from sys_power where power_father=#{powerFather}
+	</select>
+
+	<insert id="insert" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysPower">
+		insert into sys_power
+		(id, power_num, power_name,
+		power_module, power_type, power_father,
+		power_level, remote_url, is_use,
+		power_update_time, special_power_key,
+		special_power_value,url,icon,src
+		)
+		values (#{id,jdbcType=BIGINT},
+		#{powerNum,jdbcType=VARCHAR},
+		#{powerName,jdbcType=VARCHAR},
+		#{powerModule,jdbcType=VARCHAR}, #{powerType,jdbcType=VARCHAR},
+		#{powerFather,jdbcType=VARCHAR},
+		#{powerLevel,jdbcType=VARCHAR},
+		#{remoteUrl,jdbcType=VARCHAR},
+		#{isUse,jdbcType=VARCHAR},
+		#{powerUpdateTime,jdbcType=TIMESTAMP},
+		#{specialPowerKey,jdbcType=VARCHAR},
+		#{specialPowerValue,jdbcType=VARCHAR},
+		#{url,jdbcType=VARCHAR},
+		#{icon,jdbcType=VARCHAR},
+		#{src,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysPower">
+		insert into sys_power
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="powerNum != null">
+				power_num,
+			</if>
+			<if test="powerName != null">
+				power_name,
+			</if>
+			<if test="powerModule != null">
+				power_module,
+			</if>
+			<if test="powerType != null">
+				power_type,
+			</if>
+			<if test="powerFather != null">
+				power_father,
+			</if>
+			<if test="powerLevel != null">
+				power_level,
+			</if>
+			<if test="remoteUrl != null">
+				remote_url,
+			</if>
+			<if test="isUse != null">
+				is_use,
+			</if>	
+			power_update_time,
+			<if test="specialPowerKey != null">
+				special_power_key,
+			</if>
+			<if test="specialPowerValue != null">
+				special_power_value,
+			</if>
+			<if test="url != null">
+				url,
+			</if>
+			<if test="icon != null">
+				icon,
+			</if>
+			<if test="src != null">
+				src,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="powerNum != null">
+				#{powerNum,jdbcType=VARCHAR},
+			</if>
+			<if test="powerName != null">
+				#{powerName,jdbcType=VARCHAR},
+			</if>
+			<if test="powerModule != null">
+				#{powerModule,jdbcType=VARCHAR},
+			</if>
+			<if test="powerType != null">
+				#{powerType,jdbcType=VARCHAR},
+			</if>
+			<if test="powerFather != null">
+				#{powerFather,jdbcType=VARCHAR},
+			</if>
+			<if test="powerLevel != null">
+				#{powerLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="remoteUrl != null">
+				#{remoteUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="isUse != null">
+				#{isUse,jdbcType=VARCHAR},
+			</if>
+			<if test="powerUpdateTime != null">
+				#{powerUpdateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="powerUpdateTime == null">
+				now(),
+			</if>
+			<if test="specialPowerKey != null">
+				#{specialPowerKey,jdbcType=VARCHAR},
+			</if>
+			<if test="specialPowerValue != null">
+				#{specialPowerValue,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=VARCHAR},
+			</if>
+			<if test="icon != null">
+				#{icon,jdbcType=VARCHAR},
+			</if>
+			<if test="src != null">
+				#{src,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectPowerList" resultMap="BaseResultMap"
+		parameterType="com.mhtech.platform.msrv.auth.bean.pojo.PowerSearchDTO">
+		select
+		<include refid="Base_Column_List" />
+		from sys_power_1118
+		where 1 = 1
+		<if test="powerNums != null">
+			and power_num in
+			<foreach collection="powerNums" item="powerNum" index="index"
+				open="(" close=")" separator=",">
+				#{powerNum, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="powerTypes != null">
+			and power_type in
+			<foreach collection="powerTypes" item="powerType" index="index"
+				open="(" close=")" separator=",">
+				#{powerType, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+	</select>
+</mapper>

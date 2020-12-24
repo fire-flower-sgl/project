@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.ParamAlertTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.sharing.dao.model.ParamAlertType" >
+    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+    <result column="type_alias" property="typeAlias" jdbcType="VARCHAR" />
+    <result column="parent_code" property="parentCode" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+  
+  
+  <select id="findAlertType" parameterType="java.lang.String" resultType="boolean">
+       <![CDATA[ SELECT  count(type_code) from sp_param_alert_type where type_code=#{typeCode} ]]>
+  </select>
+  
+  <select id="getParamAlertType" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select type_code, type_alias, parent_code from sp_param_alert_type where type_code=#{typeCode}
+  </select>
+  
+  
+  <insert id="insert" parameterType="com.mhtech.platform.msrv.sharing.dao.model.ParamAlertType" >
+    insert into sp_param_alert_type (type_code, type_alias, parent_code
+      )
+    values (#{typeCode,jdbcType=VARCHAR}, #{typeAlias,jdbcType=VARCHAR}, #{parentCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.ParamAlertType" >
+    insert into sp_param_alert_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="typeCode != null" >
+        type_code,
+      </if>
+      <if test="typeAlias != null" >
+        type_alias,
+      </if>
+      <if test="parentCode != null" >
+        parent_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="typeCode != null" >
+        #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="typeAlias != null" >
+        #{typeAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null" >
+        #{parentCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

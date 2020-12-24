@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mhtech.platform.msrv.sharing.dao.mapper.ServerNotifyRuleMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.ServerNotifyRule">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="server_id" property="serverId" jdbcType="BIGINT" />
+		<result column="is_enable" property="isEnable" jdbcType="BIT" />
+		<result column="recv_start_time" property="recvStartTime"
+			jdbcType="VARCHAR" />
+		<result column="recv_end_time" property="recvEndTime" jdbcType="VARCHAR" />
+		<result column="refuse_start_time" property="refuseStartTime"
+			jdbcType="VARCHAR" />
+		<result column="refuse_end_time" property="refuseEndTime"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, server_id, is_enable, recv_start_time, recv_end_time,
+		refuse_start_time, refuse_end_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from sp_server_notify_rule
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from sp_server_notify_rule
+		where id in 
+	    <foreach collection="keys" item="id" open="(" separator="," close=")">
+	  		#{id}
+	    </foreach> 
+	</delete>
+	<insert id="insert"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerNotifyRule">
+		insert into sp_server_notify_rule (id, server_id, is_enable,
+		recv_start_time, recv_end_time, refuse_start_time,
+		refuse_end_time)
+		values (#{id,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT},
+		#{isEnable,jdbcType=BIT},
+		#{recvStartTime,jdbcType=VARCHAR}, #{recvEndTime,jdbcType=VARCHAR}, #{refuseStartTime,jdbcType=VARCHAR},
+		#{refuseEndTime,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerNotifyRule">
+		insert into sp_server_notify_rule
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="serverId != null">
+				server_id,
+			</if>
+			<if test="isEnable != null">
+				is_enable,
+			</if>
+			<if test="recvStartTime != null">
+				recv_start_time,
+			</if>
+			<if test="recvEndTime != null">
+				recv_end_time,
+			</if>
+			<if test="refuseStartTime != null">
+				refuse_start_time,
+			</if>
+			<if test="refuseEndTime != null">
+				refuse_end_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="serverId != null">
+				#{serverId,jdbcType=BIGINT},
+			</if>
+			<if test="isEnable != null">
+				#{isEnable,jdbcType=BIT},
+			</if>
+			<if test="recvStartTime != null">
+				#{recvStartTime,jdbcType=VARCHAR},
+			</if>
+			<if test="recvEndTime != null">
+				#{recvEndTime,jdbcType=VARCHAR},
+			</if>
+			<if test="refuseStartTime != null">
+				#{refuseStartTime,jdbcType=VARCHAR},
+			</if>
+			<if test="refuseEndTime != null">
+				#{refuseEndTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.mhtech.platform.msrv.pojo.ServerNotifyRule">
+		update sp_server_notify_rule
+		<set>
+			<if test="serverId != null">
+				server_id = #{serverId,jdbcType=BIGINT},
+			</if>
+			<if test="isEnable != null">
+				is_enable = #{isEnable,jdbcType=BIT},
+			</if>
+			<if test="recvStartTime != null">
+				recv_start_time = #{recvStartTime,jdbcType=VARCHAR},
+			</if>
+			<if test="recvEndTime != null">
+				recv_end_time = #{recvEndTime,jdbcType=VARCHAR},
+			</if>
+			<if test="refuseStartTime != null">
+				refuse_start_time = #{refuseStartTime,jdbcType=VARCHAR},
+			</if>
+			<if test="refuseEndTime != null">
+				refuse_end_time = #{refuseEndTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerNotifyRule">
+		update sp_server_notify_rule
+		set server_id = #{serverId,jdbcType=BIGINT},
+		is_enable = #{isEnable,jdbcType=BIT},
+		recv_start_time = #{recvStartTime,jdbcType=VARCHAR},
+		recv_end_time = #{recvEndTime,jdbcType=VARCHAR},
+		refuse_start_time = #{refuseStartTime,jdbcType=VARCHAR},
+		refuse_end_time = #{refuseEndTime,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectEntities" resultMap="BaseResultMap"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerNotifyRule">
+		select
+		<include refid="Base_Column_List" />
+		from sp_server_notify_rule
+		where 1 = 1
+			<if test="serverId != null">
+				and server_id = #{serverId,jdbcType=BIGINT}
+			</if>
+			<if test="isEnable != null">
+				and is_enable = #{isEnable,jdbcType=BIT}
+			</if>
+	</select>
+</mapper>

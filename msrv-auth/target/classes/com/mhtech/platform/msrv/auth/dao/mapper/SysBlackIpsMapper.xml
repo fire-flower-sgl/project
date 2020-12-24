@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.auth.dao.mapper.SysBlackIpsMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.auth.dao.model.SysBlackIps" >
+    <id column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ip, memo, is_deleted
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_black_ipssys_black_ips
+    where ip = #{ip,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_black_ipssys_black_ips
+    where ip = #{ip,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysBlackIps" >
+    insert into sys_black_ipssys_black_ips (ip, memo, is_deleted
+      )
+    values (#{ip,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysBlackIps" >
+    insert into sys_black_ipssys_black_ips
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysBlackIps" >
+    update sys_black_ipssys_black_ips
+    <set >
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+    </set>
+    where ip = #{ip,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysBlackIps" >
+    update sys_black_ipssys_black_ips
+    set memo = #{memo,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=BIT}
+    where ip = #{ip,jdbcType=VARCHAR}
+  </update>
+    <select id="queryAll" resultMap="BaseResultMap" >
+   		    select 
+    <include refid="Base_Column_List" />
+    	from sys_black_ipssys_black_ips where is_deleted = '0'
+  </select>
+  
+  
+</mapper>

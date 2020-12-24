@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.UserActionLogMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.sharing.dao.model.UserActionLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="action_module" property="actionModule" jdbcType="VARCHAR" />
+    <result column="action_num" property="actionNum" jdbcType="VARCHAR" />
+    <result column="action_start_time" property="actionStartTime" jdbcType="TIMESTAMP" />
+    <result column="action_end_time" property="actionEndTime" jdbcType="TIMESTAMP" />
+    
+    <association property="spUserLog"  javaType="com.mhtech.platform.msrv.sharing.dao.model.SpUserLog">
+	    <id column="bid" property="id" jdbcType="BIGINT" />
+	    <result column="usr_act_id" property="usrActId" jdbcType="BIGINT" />
+	    <result column="action_type" property="actionType" jdbcType="VARCHAR" />
+	    <result column="action_sql_id" property="actionSqlId" jdbcType="LONGVARCHAR" />
+        <result column="sql_params" property="sqlParams" jdbcType="LONGVARCHAR" />
+    </association>
+      
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_code, action_module, action_num, action_start_time, action_end_time
+  </sql>
+  
+  
+  
+	<select id="allLog" resultMap="BaseResultMap" >
+	  select a.*,b.id bid,b.action_sql_id,b.action_type,b.sql_params,b.usr_act_id 
+	  from  sp_user_action_log  a LEFT JOIN  sp_user_action_detail  b  on a.id=b.usr_act_id 
+      where a.id &lt;= #{max} and a.id &gt;= #{min} limit #{eachItem}; 
+	</select>
+	
+	<select id="selectManMin" resultType="Map" parameterType="java.lang.String">
+	    select COUNT(id) size,MAX(id) max,MIN(id) min from  sp_user_action_log where action_start_time BETWEEN #{topTime} and #{endTime}
+	</select>
+
+  
+   <delete id="deleteDate" parameterType="java.lang.String">
+		DELETE from sp_user_action_log where action_start_time BETWEEN #{topTime} and #{endTime}
+	</delete>
+  
+  <delete id="delete" parameterType="java.lang.Integer" >
+       DELETE  from  sp_user_action_log where date(action_start_time)=date_sub(curdate(),interval #{day} day);
+  </delete>
+  
+  <select id="selectIds" resultType="java.lang.Long" parameterType="java.lang.String" >
+	    select distinct b.id id  from  sp_user_action_log  a LEFT JOIN  sp_user_action_detail  b  on a.id=b.usr_act_id 
+	    where a.action_start_time BETWEEN #{topTime} and #{endTime}
+  </select> 
+  
+  
+  
+  
+  <select id="selectLog" resultMap="BaseResultMap" parameterType="com.mhtech.platform.log.pojo.UserActionLogDTO">
+		SELECT * from sp_user_action_log
+		<where>
+			<if test="id!=null"> id=#{id} </if>
+			<if test="userCode!=null">and user_code=#{userCode}</if>
+			<if test="actionModule!=null">and action_module=#{actionModule}</if>
+			<if test="actionNum!=null">and action_num=#{actionNum}</if>
+			<if test="actionStartTime!=null">and action_start_time=#{actionStartTime}</if>
+		    <if test="actionEndTime!=null">and action_end_time=#{actionEndTime}</if>
+		</where>
+	</select>
+	<select id="selectLogSum" resultType="java.lang.Integer" parameterType="com.mhtech.platform.log.pojo.UserActionLogDTO">
+		SELECT COUNT(id) from sp_user_action_log
+		<where>
+			<if test="id!=null"> id=#{id} </if>
+			<if test="userCode!=null">and user_code=#{userCode}</if>
+			<if test="actionModule!=null">and action_module=#{actionModule}</if>
+			<if test="actionNum!=null">and action_num=#{actionNum}</if>
+			<if test="actionStartTime!=null">and action_start_time=#{actionStartTime}</if>
+		    <if test="actionEndTime!=null">and action_end_time=#{actionEndTime}</if>
+		</where>
+	</select>
+	
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sp_user_action_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sp_user_action_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mhtech.platform.msrv.sharing.dao.model.UserActionLog" >
+    insert into sp_user_action_log (id, user_code, action_module, 
+      action_num, action_start_time, action_end_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{userCode,jdbcType=VARCHAR}, #{actionModule,jdbcType=VARCHAR}, 
+      #{actionNum,jdbcType=VARCHAR}, #{actionStartTime,jdbcType=TIMESTAMP}, #{actionEndTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.UserActionLog" >
+    insert into sp_user_action_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userCode != null" >
+        user_code,
+      </if>
+      <if test="actionModule != null" >
+        action_module,
+      </if>
+      <if test="actionNum != null" >
+        action_num,
+      </if>
+      <if test="actionStartTime != null" >
+        action_start_time,
+      </if>
+      <if test="actionEndTime != null" >
+        action_end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="actionModule != null" >
+        #{actionModule,jdbcType=VARCHAR},
+      </if>
+      <if test="actionNum != null" >
+        #{actionNum,jdbcType=VARCHAR},
+      </if>
+      <if test="actionStartTime != null" >
+        #{actionStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actionEndTime != null" >
+        #{actionEndTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.UserActionLog" >
+    update sp_user_action_log
+    <set >
+      <if test="userCode != null" >
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="actionModule != null" >
+        action_module = #{actionModule,jdbcType=VARCHAR},
+      </if>
+      <if test="actionNum != null" >
+        action_num = #{actionNum,jdbcType=VARCHAR},
+      </if>
+      <if test="actionStartTime != null" >
+        action_start_time = #{actionStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actionEndTime != null" >
+        action_end_time = #{actionEndTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.sharing.dao.model.UserActionLog" >
+    update sp_user_action_log
+    set user_code = #{userCode,jdbcType=VARCHAR},
+      action_module = #{actionModule,jdbcType=VARCHAR},
+      action_num = #{actionNum,jdbcType=VARCHAR},
+      action_start_time = #{actionStartTime,jdbcType=TIMESTAMP},
+      action_end_time = #{actionEndTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  	<insert id="batchInsert" parameterType="list">
+		insert into sp_user_action_log (id, user_code, action_module,action_num, action_start_time, action_end_time ) values 
+		<foreach collection="list" item="obj" separator="," >
+			(#{obj.id,jdbcType=BIGINT}, #{obj.userCode,jdbcType=VARCHAR}, #{obj.actionModule,jdbcType=VARCHAR}, 
+			#{obj.actionNum,jdbcType=VARCHAR}, #{obj.actionStartTime,jdbcType=TIMESTAMP}, #{obj.actionEndTime,jdbcType=TIMESTAMP} )
+		</foreach>
+	</insert>
+</mapper>

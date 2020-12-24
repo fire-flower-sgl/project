@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.SpPersonneMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.SpPersonne">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="pcode" property="pcode" jdbcType="VARCHAR" />
+		<result column="pname" property="pname" jdbcType="VARCHAR" />
+		<result column="mobileno" property="mobileno" jdbcType="VARCHAR" />
+		<result column="unit_id" property="unitId" jdbcType="VARCHAR" />
+		<result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="valid_flag" property="validFlag" jdbcType="INTEGER" />
+		<result column="shift_id" property="shiftId" jdbcType="VARCHAR" />
+		<result column="is_localton" property="isLocalton" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, pcode, pname, mobileno, unit_id, unit_name, create_date, valid_flag,
+		shift_id,email,
+		is_localton
+	</sql>
+
+
+
+	<select id="selectSum" resultType="java.lang.Integer">
+		SELECT COUNT(a.id) from sp_personne a LEFT JOIN sp_shift b on
+		a.shift_id=b.shiftId
+	</select>
+	<select id="listSpPersonne" resultMap="BaseResultMap">
+		SELECT a.email,a.pname,a.mobileno,a.create_date,b.shift shift_id from
+		sp_personne a LEFT JOIN sp_shift b on a.shift_id=b.shiftId
+	</select>
+	
+	<select id="listByCodes" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from sp_personne
+		<where>
+			<if test="codes != null and codes.size > 0">
+				pcode in 
+				<foreach collection="codes" close=")" open="(" item="code" separator=",">
+					#{code, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sp_personne
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from sp_personne
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.SpPersonne">
+		insert into sp_personne (id, pcode, pname,
+		mobileno, unit_id, unit_name,
+		create_date, valid_flag, shift_id,
+		is_localton)
+		values (#{id,jdbcType=VARCHAR}, #{pcode,jdbcType=VARCHAR},
+		#{pname,jdbcType=VARCHAR},
+		#{mobileno,jdbcType=VARCHAR}, #{unitId,jdbcType=VARCHAR}, #{unitName,jdbcType=VARCHAR},
+		#{createDate,jdbcType=TIMESTAMP}, #{validFlag,jdbcType=INTEGER},
+		#{shiftId,jdbcType=VARCHAR},
+		#{isLocalton,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.SpPersonne">
+		insert into sp_personne
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="pcode != null">
+				pcode,
+			</if>
+			<if test="pname != null">
+				pname,
+			</if>
+			<if test="mobileno != null">
+				mobileno,
+			</if>
+			<if test="unitId != null">
+				unit_id,
+			</if>
+			<if test="unitName != null">
+				unit_name,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="validFlag != null">
+				valid_flag,
+			</if>
+			<if test="shiftId != null">
+				shift_id,
+			</if>
+			<if test="isLocalton != null">
+				is_localton,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="pcode != null">
+				#{pcode,jdbcType=VARCHAR},
+			</if>
+			<if test="pname != null">
+				#{pname,jdbcType=VARCHAR},
+			</if>
+			<if test="mobileno != null">
+				#{mobileno,jdbcType=VARCHAR},
+			</if>
+			<if test="unitId != null">
+				#{unitId,jdbcType=VARCHAR},
+			</if>
+			<if test="unitName != null">
+				#{unitName,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="validFlag != null">
+				#{validFlag,jdbcType=INTEGER},
+			</if>
+			<if test="shiftId != null">
+				#{shiftId,jdbcType=VARCHAR},
+			</if>
+			<if test="isLocalton != null">
+				#{isLocalton,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.SpPersonne">
+		update sp_personne
+		<set>
+			<if test="pcode != null">
+				pcode = #{pcode,jdbcType=VARCHAR},
+			</if>
+			<if test="pname != null">
+				pname = #{pname,jdbcType=VARCHAR},
+			</if>
+			<if test="mobileno != null">
+				mobileno = #{mobileno,jdbcType=VARCHAR},
+			</if>
+			<if test="unitId != null">
+				unit_id = #{unitId,jdbcType=VARCHAR},
+			</if>
+			<if test="unitName != null">
+				unit_name = #{unitName,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="validFlag != null">
+				valid_flag = #{validFlag,jdbcType=INTEGER},
+			</if>
+			<if test="shiftId != null">
+				shift_id = #{shiftId,jdbcType=VARCHAR},
+			</if>
+			<if test="isLocalton != null">
+				is_localton = #{isLocalton,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.SpPersonne">
+		update sp_personne
+		set pcode = #{pcode,jdbcType=VARCHAR},
+		pname = #{pname,jdbcType=VARCHAR},
+		mobileno = #{mobileno,jdbcType=VARCHAR},
+		unit_id = #{unitId,jdbcType=VARCHAR},
+		unit_name = #{unitName,jdbcType=VARCHAR},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		valid_flag = #{validFlag,jdbcType=INTEGER},
+		shift_id = #{shiftId,jdbcType=VARCHAR},
+		is_localton = #{isLocalton,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

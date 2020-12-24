@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mhtech.platform.msrv.sharing.dao.mapper.SpDeviceAdminMapper">
+	<resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.pojo.SpDeviceAdmin">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="server_code" property="serverCode" jdbcType="VARCHAR" />
+		<result column="server_type" property="serverType" jdbcType="VARCHAR" />
+		<result column="server_name" property="serverName" jdbcType="VARCHAR" />
+		<result column="ip" property="ip" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="created_time" property="createdTime" jdbcType="VARCHAR" />
+		<result column="apply_projects" property="applyProjects"
+			jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, server_code, server_type, server_name, ip, username, status,
+		created_time,email,mobile
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from sp_device_admin
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="findDeviceAdminByIp" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sp_device_admin
+		where ip = #{ip,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="batchInsert" parameterType="list">
+		insert into sp_device_admin (id, server_code, server_name, ip,
+		username, status, created_time,email,mobile) values
+		<foreach collection="list" item="obj" separator=",">
+			(#{obj.id,jdbcType=VARCHAR}, #{obj.serverCode,jdbcType=VARCHAR},
+			#{obj.serverName,jdbcType=VARCHAR}, #{obj.ip,jdbcType=VARCHAR},
+			#{obj.username,jdbcType=VARCHAR},
+			#{obj.status,jdbcType=VARCHAR},#{obj.createdTime,jdbcType=VARCHAR},#{obj.email,jdbcType=VARCHAR},#{obj.mobile,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.pojo.SpDeviceAdmin">
+		update sp_device_admin
+		set
+		server_name = #{serverName,jdbcType=VARCHAR},
+		ip = #{ip,jdbcType=VARCHAR},
+		status = #{status,jdbcType=VARCHAR},
+		username = #{username,jdbcType=VARCHAR},
+		email = #{email,jdbcType=VARCHAR},
+		mobile = #{mobile,jdbcType=VARCHAR},
+		created_time = #{createdTime,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteById" parameterType="java.lang.String">
+		delete from sp_device_admin
+		where server_code = #{code}
+	</delete>
+	
+	
+
+</mapper>

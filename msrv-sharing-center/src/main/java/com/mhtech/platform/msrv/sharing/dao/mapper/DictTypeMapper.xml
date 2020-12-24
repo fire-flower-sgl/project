@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.DictTypeMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.DictType">
+		<id column="code" property="code" jdbcType="INTEGER" />
+		<result column="dict_type" property="dictType" jdbcType="VARCHAR" />
+		<result column="memo" property="memo" jdbcType="VARCHAR" />
+		<result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+	</resultMap>
+	<resultMap id="DictValueResultMap"
+		type="com.mhtech.platform.msrv.pojo.DictVO">
+		<result column="name" property="dictName" jdbcType="VARCHAR" />
+		<result column="value" property="dictValue" jdbcType="VARCHAR" />
+		<result column="dict_type" property="dictType" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		code, dict_type, memo, is_deleted
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from sp_dict_type
+		where code = #{code,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sp_dict_type
+		where code = #{code,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.mhtech.platform.msrv.sharing.dao.model.DictType">
+		insert into sp_dict_type (code, dict_type, memo,
+		is_deleted)
+		values (#{code,jdbcType=INTEGER}, #{dictType,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{isDeleted,jdbcType=BIT})
+	</insert>
+	<insert id="insertSelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.DictType">
+		insert into sp_dict_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="dictType != null">
+				dict_type,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="isDeleted != null">
+				is_deleted,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=INTEGER},
+			</if>
+			<if test="dictType != null">
+				#{dictType,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted,jdbcType=BIT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.DictType">
+		update sp_dict_type
+		<set>
+			<if test="dictType != null">
+				dict_type = #{dictType,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="isDeleted != null">
+				is_deleted = #{isDeleted,jdbcType=BIT},
+			</if>
+		</set>
+		where code = #{code,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.sharing.dao.model.DictType">
+		update sp_dict_type
+		set dict_type = #{dictType,jdbcType=VARCHAR},
+		memo = #{memo,jdbcType=VARCHAR},
+		is_deleted = #{isDeleted,jdbcType=BIT}
+		where code = #{code,jdbcType=INTEGER}
+	</update>
+	<select id="listDictType" resultMap="BaseResultMap"
+		parameterType="com.mhtech.platform.msrv.pojo.DictTypeSearchParam">
+		select
+		<include refid="Base_Column_List" />
+		from sp_dict_type
+		<where>
+			<if test="type != null">
+				dict_type like concat('%', #{type,jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="memo != null">
+				and memo like concat('%', #{memo,jdbcType=VARCHAR}, '%')
+			</if>
+		</where>
+	</select>
+	<select id="listTypeValue" parameterType="java.lang.String" resultMap="DictValueResultMap">
+		select name, value, dict_type from sp_dict where dict_type = #{type,jdbcType=VARCHAR}
+	</select>
+</mapper>

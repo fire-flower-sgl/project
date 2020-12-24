@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mhtech.platform.msrv.sharing.dao.mapper.ServerMonitorLogMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.ServerMonitorLog">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="server_id" property="serverId" jdbcType="BIGINT" />
+		<result column="param_name" property="paramName" jdbcType="VARCHAR" />
+		<result column="param_alias" property="paramAlias" jdbcType="VARCHAR" />
+		<result column="alter_value" property="alterValue" jdbcType="DECIMAL" />
+		<result column="memo" property="memo" jdbcType="VARCHAR" />
+		<result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="ComponentUsageResultMap"
+		type="com.mhtech.platform.msrv.pojo.ComponentUsageVO">
+		<result column="server_name" property="compntName" jdbcType="VARCHAR" />
+		<result column="cpu" property="cpu" jdbcType="DECIMAL" />
+		<result column="disk" property="disk" jdbcType="DECIMAL" />
+		<result column="ram" property="ram" jdbcType="DECIMAL" />
+	</resultMap>
+	<resultMap id="SummaryResultMap" type="com.mhtech.platform.msrv.pojo.SummaryVO">
+		<result column="param_name" property="paramName" jdbcType="VARCHAR" />
+		<result column="param_code" property="paramCode" jdbcType="VARCHAR" />
+		<result column="count" property="count" jdbcType="DECIMAL" />
+		<result column="value" property="count" jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, server_id, param_name, param_alias, alter_value, memo, created_time
+	</sql>
+	
+	
+	<select id="allLog" resultMap="BaseResultMap" >
+		SELECT * from sp_server_monitor_log where id &lt;= #{max} and id &gt;= #{min} limit #{eachItem}; 
+	</select>
+	
+	<select id="selectManMin" resultType="Map" parameterType="java.lang.String">
+	     select MAX(id) max,MIN(id) min,COUNT(id) size from  sp_server_monitor_log where created_time BETWEEN #{topTime} and #{endTime}
+	</select>
+	 
+	<delete id="deleteDate" parameterType="java.lang.String">
+		DELETE from sp_server_monitor_log where created_time BETWEEN #{topTime} and #{endTime}
+	</delete>
+	
+	
+	
+	
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from sp_server_monitor_log
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from sp_server_monitor_log
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerMonitorLog">
+		insert into sp_server_monitor_log (id, server_id, param_name,
+		param_alias, alter_value, memo, created_time
+		)
+		values (#{id,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT},
+		#{paramName,jdbcType=VARCHAR},
+		#{paramAlias,jdbcType=VARCHAR}, #{alterValue,jdbcType=DECIMAL}, #{memo,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerMonitorLog">
+		insert into sp_server_monitor_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="serverId != null">
+				server_id,
+			</if>
+			<if test="paramName != null">
+				param_name,
+			</if>
+			<if test="paramAlias != null">
+				param_alias,
+			</if>
+			<if test="alterValue != null">
+				alter_value,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="createdTime != null">
+				created_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="serverId != null">
+				#{serverId,jdbcType=BIGINT},
+			</if>
+			<if test="paramName != null">
+				#{paramName,jdbcType=VARCHAR},
+			</if>
+			<if test="paramAlias != null">
+				#{paramAlias,jdbcType=VARCHAR},
+			</if>
+			<if test="alterValue != null">
+				#{alterValue,jdbcType=DECIMAL},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerMonitorLog">
+		update sp_server_monitor_log
+		<set>
+			<if test="serverId != null">
+				server_id = #{serverId,jdbcType=BIGINT},
+			</if>
+			<if test="paramName != null">
+				param_name = #{paramName,jdbcType=VARCHAR},
+			</if>
+			<if test="paramAlias != null">
+				param_alias = #{paramAlias,jdbcType=VARCHAR},
+			</if>
+			<if test="alterValue != null">
+				alter_value = #{alterValue,jdbcType=DECIMAL},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				created_time = #{createdTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerMonitorLog">
+		update sp_server_monitor_log
+		set server_id = #{serverId,jdbcType=BIGINT},
+		param_name = #{paramName,jdbcType=VARCHAR},
+		param_alias = #{paramAlias,jdbcType=VARCHAR},
+		alter_value = #{alterValue,jdbcType=DECIMAL},
+		memo = #{memo,jdbcType=VARCHAR},
+		created_time = #{createdTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<insert id="batchInsert" parameterType="list">
+		insert into sp_server_monitor_log (id, server_id, param_name,
+		param_alias, alter_value, created_time ) values
+		<foreach collection="list" item="obj" separator=",">
+			(#{obj.id}, #{obj.serverId}, #{obj.paramName}, #{obj.paramAlias},
+			#{obj.alterValue}, now() )
+		</foreach>
+	</insert>
+	<select id="totalComponentUsage" resultMap="ComponentUsageResultMap">
+		select
+		if(cpu_count = 0, 0, round(cpu_sum / cpu_count, 2)) cpu, 
+		if(disk_count = 0, 0, round(disk_sum / disk_count, 2)) disk, 
+		if(ram_count = 0, 0, round(ram_sum / ram_count, 2)) ram, 
+		a.server_name from (
+			SELECT server_id, 
+				sum(case param_name when 'CPU' then alter_value else 0 end) cpu_sum,
+				sum(case param_name when 'CPU' then 1 else 0 end) cpu_count,
+				sum(case param_name when 'Disk' then alter_value else 0 end) disk_sum,
+				sum(case param_name when 'Disk' then 1 else 0 end) disk_count,
+				sum(case param_name when 'RAM' then alter_value else 0 end) ram_sum,
+				sum(case param_name when 'RAM' then 1 else 0 end) ram_count
+			from sp_server_monitor_log where param_name in ('CPU', 'Disk', 'RAM') 
+				and created_time BETWEEN #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+			group by server_id limit #{tops}
+		) t left join 
+		(select id,server_code,server_name from sp_server_admin union select id,server_code,server_name from sp_device_admin)
+		 a on t.server_id = a.id
+	</select>
+	
+	<select id="totalHardwareSummary" resultMap="SummaryResultMap">
+		SELECT param_name as param_code, param_alias as param_name, round(avg(alter_value), 2) count, 100 as value
+		from sp_server_monitor_log where param_name in
+		<foreach collection="paramNames" item="paramName" separator="," open="(" close=")">
+			#{paramName}
+		</foreach>
+		and created_time BETWEEN #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP} group by param_name, param_alias
+	</select>
+	
+	<select id="totalBizSummary" resultMap="SummaryResultMap">
+		SELECT a.alert_code param_code, count(a.alert_code) count from sp_server_monitor_log l
+			left join sp_param_alert a on l.param_name = a.param_name
+		where l.created_time BETWEEN #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+			and a.alert_code in
+			<foreach collection="alertCodes" item="alertCode" separator="," open="(" close=")">
+				#{alertCode}
+			</foreach>
+		group by a.alert_code
+	</select>
+</mapper>

@@ -1,0 +1,444 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mhtech.platform.msrv.sharing.dao.mapper.ServerNotifyLogMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.ServerNotifyLog">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="server_id" property="serverId" jdbcType="BIGINT" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="param_name" property="paramName" jdbcType="VARCHAR" />
+		<result column="usercode" property="userCode" jdbcType="VARCHAR" />
+		<result column="is_send" property="isSend" jdbcType="BIT" />
+		<result column="status" property="status" jdbcType="SMALLINT" />
+		<result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="alert_id" property="alertId" jdbcType="BIGINT" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.mhtech.platform.msrv.sharing.dao.model.ServerNotifyLog"
+		extends="BaseResultMap">
+		<result column="content" property="content" jdbcType="LONGVARCHAR" />
+		<result column="alert_id" property="alertId" jdbcType="BIGINT" />
+	</resultMap>
+	<resultMap id="ListResultMap"
+		type="com.mhtech.platform.msrv.pojo.ServerNotifyLog">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="server_id" property="serverId" jdbcType="BIGINT" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="param_name" property="paramName" jdbcType="VARCHAR" />
+		<result column="usercode" property="userCode" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="LONGVARCHAR" />
+		<result column="is_send" property="isSend" jdbcType="BIT" />
+		<result column="status" property="status" jdbcType="SMALLINT" />
+		<result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="alert_id" property="alertId" jdbcType="BIGINT" />
+	</resultMap>
+	<resultMap id="ListAlertResultMap"
+		type="com.mhtech.platform.msrv.pojo.ServerNotifyLog">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="server_id" property="serverId" jdbcType="BIGINT" />
+		<result column="server_name" property="serverBiz" jdbcType="VARCHAR" />
+		<result column="param_name" property="paramName" jdbcType="VARCHAR" />
+		<result column="usercode" property="userCode" jdbcType="VARCHAR" />
+		<result column="last_time" property="lastTimes" jdbcType="VARCHAR" />
+		<result column="is_send" property="notified" jdbcType="SMALLINT" />
+		<result column="status" property="status" jdbcType="SMALLINT" />
+		<result column="level" property="level" jdbcType="SMALLINT" />
+		<result column="ip" property="serverName" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="alert_time" property="happenTime" jdbcType="TIMESTAMP" />
+		<result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="DailyCountMap"
+		type="com.mhtech.platform.msrv.pojo.DailyAlertsVO">
+		<result column="date" property="date" jdbcType="TIMESTAMP" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="DetailAlertTypeMap"
+		type="com.mhtech.platform.msrv.pojo.AlertRateVO">
+		<result column="error_msg" property="alertType" jdbcType="VARCHAR" />
+		<result column="cunt" property="alertRate" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, server_id, username, param_name, usercode, is_send, status, created_time, alert_id
+	</sql>
+	<sql id="Blob_Column_List">
+		content
+	</sql>
+	
+	
+	<!--条件 查询 -->
+	<select id="listNotifyStatistics" resultType="com.mhtech.platform.msrv.pojo.DailyAlertsVO" >
+		 SELECT  count(1) count,left(alert_time, 10) date from  sp_alert_log where alert_time
+		 between #{topTime} and #{endTime} and param_name=(SELECT param_name from sp_server_notify_log where id=#{id})
+		 GROUP BY date
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Long">
+		select alert_id,
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from sp_server_notify_log
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from sp_server_notify_log
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerNotifyLog">
+		insert into sp_server_notify_log (id, server_id, username,
+		is_send, status,
+		created_time, content, param_name, usercode, alert_id)
+		values (#{id,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT},
+		#{username,jdbcType=VARCHAR},
+		#{isSend,jdbcType=BIT}, #{status,jdbcType=SMALLINT},
+		#{createdTime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR},
+		#{paramName,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR}, #{alertId,jdbcType=BIGINT})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerNotifyLog">
+		insert into sp_server_notify_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="serverId != null">
+				server_id,
+			</if>
+			<if test="username != null">
+				username,
+			</if>
+			<if test="isSend != null">
+				is_send,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="createdTime != null">
+				created_time,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="paramName != null">
+				param_name,
+			</if>
+			<if test="userCode != null">
+				usercode,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="serverId != null">
+				#{serverId,jdbcType=BIGINT},
+			</if>
+			<if test="username != null">
+				#{username,jdbcType=VARCHAR},
+			</if>
+			<if test="isSend != null">
+				#{isSend,jdbcType=BIT},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=SMALLINT},
+			</if>
+			<if test="createdTime != null">
+				#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="paramName != null">
+				#{param_name,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{usercode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerNotifyLog">
+		update sp_server_notify_log
+		<set>
+			<if test="serverId != null">
+				server_id = #{serverId,jdbcType=BIGINT},
+			</if>
+			<if test="username != null">
+				username = #{username,jdbcType=VARCHAR},
+			</if>
+			<if test="isSend != null">
+				is_send = #{isSend,jdbcType=BIT},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=SMALLINT},
+			</if>
+			<if test="createdTime != null">
+				created_time = #{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="paramName != null">
+				param_name = #{paramName,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				usercode = #{userCode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerNotifyLog">
+		update sp_server_notify_log
+		set server_id = #{serverId,jdbcType=BIGINT},
+		username = #{username,jdbcType=VARCHAR},
+		is_send = #{isSend,jdbcType=BIT},
+		status = #{status,jdbcType=SMALLINT},
+		created_time = #{createdTime,jdbcType=TIMESTAMP},
+		content = #{content,jdbcType=LONGVARCHAR},
+		usercode = #{userCode,jdbcType=VARCHAR},
+		param_name = #{paramName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerNotifyLog">
+		update sp_server_notify_log
+		set server_id = #{serverId,jdbcType=BIGINT},
+		username = #{username,jdbcType=VARCHAR},
+		is_send = #{isSend,jdbcType=BIT},
+		status = #{status,jdbcType=SMALLINT},
+		created_time = #{createdTime,jdbcType=TIMESTAMP},
+		usercode = #{userCode,jdbcType=VARCHAR},
+		param_name = #{paramName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectEntities" resultMap="ResultMapWithBLOBs"
+		parameterType="com.mhtech.platform.msrv.pojo.NotifyLogVO">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from sp_server_notify_log
+		where 1 = 1
+		<if test="serverId != null">
+			and server_id = #{serverId,jdbcType=BIGINT}
+		</if>
+		<if test="username != null">
+			and username = #{username,jdbcType=VARCHAR}
+		</if>
+		<if test="isSend != null">
+			and is_send = #{isSend,jdbcType=BIT}
+		</if>
+		<if test="status != null">
+			and status = #{status,jdbcType=SMALLINT}
+		</if>
+		<if test="startTime != null &amp;&amp; endTime != null ">
+			and created_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+		</if>
+	</select>
+	
+	<!-- 统计时间段内处理数 -->
+	<select id="totalDailyNotifyLog" resultMap="DailyCountMap" parameterType="com.mhtech.platform.msrv.pojo.AlertNotifyLogCounterBO">
+		SELECT
+			DATE_FORMAT(l.created_time, '%Y-%m-%d') date,
+			count(1) count
+		FROM
+			sp_server_notify_log l
+		WHERE 1 = 1
+		<if test="isSend != null">
+			and is_send = #{isSend,jdbcType=BIT}
+		</if>
+		<if test="status != null">
+			and status = #{status,jdbcType=SMALLINT}
+		</if>
+		<if test="serverId != null">
+			and server_id = #{serverId,jdbcType=BIGINT}
+		</if>
+		<if test="paramName != null">
+			and param_name = #{paramName,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime != null &amp;&amp; endTime != null ">
+			and created_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+		</if>
+		GROUP BY
+			DATE_FORMAT(l.created_time, '%Y-%m-%d')
+		ORDER BY
+			DATE_FORMAT(l.created_time, '%Y-%m-%d')
+	</select>
+	
+	<select id="listNotifyLog" resultMap="ListResultMap"
+		parameterType="com.mhtech.platform.msrv.pojo.NotifyLogVO">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from sp_server_notify_log
+		where 1 = 1
+		<if test="serverId != null">
+			and server_id = #{serverId,jdbcType=BIGINT}
+		</if>
+		<if test="username != null">
+			and username = #{username,jdbcType=VARCHAR}
+		</if>
+		<if test="isSend != null">
+			and is_send = #{isSend,jdbcType=BIT}
+		</if>
+		<if test="status != null">
+			and status = #{status,jdbcType=SMALLINT}
+		</if>
+		<if test="startTime != null &amp;&amp; endTime != null ">
+			and created_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+		</if>
+	</select>
+	
+	<!-- <select id="listAlertNotifyLog" resultMap="ListAlertResultMap"
+		parameterType="com.mhtech.platform.msrv.pojo.NotifyLogVO">
+		SELECT
+			t.id, t.server_id, t.param_name, t.cunt, t.`status`, t.alert_time, concat(t.last_time, 's') last_time, t.is_send, a.server_name,
+			a.ip,
+			r.`level`, t.content
+		FROM
+			(
+				SELECT
+					n.id,
+					l.server_id,
+					l.param_name,
+					count(1) cunt,
+					n.`status` `status`,
+					min(l.alert_time) alert_time,
+					TIME_TO_SEC(max(l.alert_time)) - TIME_TO_SEC(min(l.alert_time)) last_time,
+					n.is_send,
+					n.content
+				FROM
+					sp_server_notify_log n,
+					sp_alert_log l
+				WHERE
+					l.notify_id = n.id
+					<if test="startHappenTime != null &amp;&amp; endHappenTime != null ">
+						and l.alert_time between #{startHappenTime,jdbcType=TIMESTAMP} and #{endHappenTime,jdbcType=TIMESTAMP}
+					</if>
+				GROUP BY
+					n.id,
+					l.server_id,
+					l.param_name,
+					n.`status`,
+					n.is_send,
+					n.content
+			) t
+		LEFT JOIN sp_server_admin a ON t.server_id = a.id
+		LEFT JOIN sp_server_alert_rule r ON t.server_id = r.server_id
+		AND t.param_name = r.param_name
+		AND r.alert_limit >= cunt
+		where 1 = 1
+			<if test="serverName != null and serverName != '' ">
+				and server_name = #{serverName,jdbcType=VARCHAR}
+			</if>
+			<if test="ip != null and ip != '' ">
+				and ip = #{ip,jdbcType=VARCHAR}
+			</if>
+			<if test="notified != null">
+				and is_send = #{notified,jdbcType=BIT}
+			</if>
+			<if test="status != null">
+				and t.`status` = #{status,jdbcType=SMALLINT}
+			</if>
+			<if test="level != null">
+				and level = #{level,jdbcType=SMALLINT}
+			</if>
+	</select> -->
+	
+	<select id="listAlertNotifyLog" resultMap="ListAlertResultMap"
+		parameterType="com.mhtech.platform.msrv.pojo.NotifyLogVO">
+		SELECT
+			t.id, t.server_id, t.param_name, t.cunt, t.`status`, t.alert_time, concat(t.last_time, 's') last_time, t.is_send, a.server_name,
+			a.ip,
+			r.`level`, t.content
+		FROM
+			(
+				SELECT
+					n.id,
+					l.server_id,
+					l.param_name,
+					count(1) cunt,
+					n.`status` `status`,
+					min(l.alert_time) alert_time,
+					TIME_TO_SEC(max(l.alert_time)) - TIME_TO_SEC(min(l.alert_time)) last_time,
+					n.is_send,
+					n.content,n.alert_id
+				from sp_server_notify_log n
+				left join sp_alert_log l on l.notify_id = n.id
+				WHERE 1=1
+					<if test="startHappenTime != null &amp;&amp; endHappenTime != null ">
+						and l.alert_time between #{startHappenTime,jdbcType=TIMESTAMP} and #{endHappenTime,jdbcType=TIMESTAMP}
+					</if>
+				GROUP BY
+					n.id,
+					l.server_id,
+					l.param_name,
+					n.`status`,
+					n.is_send,
+					n.content
+			) t
+		LEFT JOIN (
+			select id,server_code,ip,server_name,username,email,status,created_time from sp_server_admin 
+			union 
+			select id,server_code,ip,server_name,username,email,status,created_time from sp_device_admin
+		) a ON t.server_id = a.id
+		LEFT JOIN sp_server_alert_rule r ON t.alert_id = r.id
+		AND t.param_name = r.param_name
+		AND r.alert_limit >= cunt
+		where 1 = 1
+			<if test="serverName != null and serverName != '' ">
+				and server_name = #{serverName,jdbcType=VARCHAR}
+			</if>
+			<if test="ip != null and ip != '' ">
+				and ip = #{ip,jdbcType=VARCHAR}
+			</if>
+			<if test="notified != null">
+				and is_send = #{notified,jdbcType=BIT}
+			</if>
+			<if test="status != null">
+				and t.`status` = #{status,jdbcType=SMALLINT}
+			</if>
+			<if test="level != null">
+				and level = #{level,jdbcType=SMALLINT}
+			</if>
+	</select>
+	
+	<insert id="insertNotifyLog" parameterType="com.mhtech.platform.msrv.pojo.AlertNotifyLogVO">
+		insert into sp_server_notify_log (id, server_id, username,
+		param_name, usercode, is_send, status, created_time, content)
+		values (#{id,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT},#{username,jdbcType=VARCHAR},		
+		#{paramName,jdbcType=VARCHAR}, #{usercode,jdbcType=VARCHAR}, #{isSend,jdbcType=BIT}, #{status,jdbcType=SMALLINT},
+		now(), #{content,jdbcType=LONGVARCHAR})
+	</insert>
+	
+	<select id="detailAlertType" resultMap="DetailAlertTypeMap">
+		SELECT t.error_code, cunt, e.error_msg from (
+		SELECT error_code, count(1) cunt from sp_alert_log where notify_id = #{id,jdbcType=BIGINT} group by error_code
+		) t left join sp_biz_err_type e on t.error_code = e.error_code
+	</select>
+	
+	<select id="findByServerId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from sp_server_notify_log 
+		where server_id = #{serverId,jdbcType=BIGINT} and status = 20 and DATE(created_time)=CURDATE() ORDER BY created_time desc LIMIT 1
+	</select>
+	
+	<!-- 更新状态 -->
+	<update id="changeStatus">
+		update sp_server_notify_log
+		<set>
+			<if test="status != null">
+				status = #{status,jdbcType=SMALLINT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

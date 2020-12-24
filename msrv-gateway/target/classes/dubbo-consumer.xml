@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+    <dubbo:application name="${dubbo.default.application.name}"/>
+
+    <!-- 使用multicast广播注册中心暴露发现服务地址 -->
+    <dubbo:registry address="zookeeper://${zookeeper.host}:${zookeeper.port}"/>
+    
+    <!-- 要扫描的包路径　使用注解方式创建服务 -->
+    <dubbo:annotation package="com.mhtech.platform.msrv.gateway.controller" />
+    
+    <dubbo:reference id="iSpUserService" group="${group}" version="${version}" interface="com.mhtech.platform.msrv.auth.service.ISpUserService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="iPowerService" group="${group}" version="${version}" interface="com.mhtech.platform.msrv.auth.service.IPowerService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="iblackIpsService" interface="com.mhtech.platform.msrv.auth.service.IBlackIpsService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />	 
+    <dubbo:reference id="acceccTimeService" interface="com.mhtech.platform.msrv.auth.service.AcceccTimeService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />	 
+    <dubbo:reference id="actionLogService" interface="com.mhtech.platform.msrv.auth.service.ActionLogService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+   	<dubbo:reference id="iworkService" interface="com.mhtech.platform.msrv.auth.service.IworkService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="serverChkRuleService" interface="com.mhtech.platform.msrv.auth.service.ServerChkRuleService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />	
+    <dubbo:reference id="serverAdminService" interface="com.mhtech.platform.msrv.monitor.service.IServerAdminService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="alertLogService" interface="com.mhtech.platform.msrv.monitor.service.IAlertLogService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="serverNotifyLogService" interface="com.mhtech.platform.msrv.monitor.service.IServerNotifyLogService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="serverMonitorLog" interface="com.mhtech.platform.msrv.monitor.service.IServerMonitorLog" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="monitorServer" interface="com.mhtech.platform.msrv.monitor.service.IServerMonitorLog" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />	
+    <dubbo:reference id="iParamAlertService" interface="com.mhtech.platform.msrv.monitor.service.IParamAlertService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />	
+    <dubbo:reference id="serverAlertRuleService" interface="com.mhtech.platform.msrv.monitor.service.IServerAlertRuleService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    
+    <!-- it监控开始 -->
+    <dubbo:reference id="iSysParameterService" interface="com.mhtech.platform.msrv.monitor.service.ISysParameterService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="spDeviceAdminService" interface="com.mhtech.platform.msrv.monitor.service.SpDeviceAdminService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="taskService" interface="com.mhtech.platform.msrv.monitor.service.TaskService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="spAlertNotifyTmplService" interface="com.mhtech.platform.msrv.monitor.service.SpAlertNotifyTmplService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" /> 
+    <dubbo:reference id="spParamAlertService" interface="com.mhtech.platform.msrv.monitor.service.SpParamAlertService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" /> 
+    <dubbo:reference id="spAlertModelService" interface="com.mhtech.platform.msrv.monitor.service.SpAlertModelService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" /> 
+    <!-- it监控开结束-->
+    
+    <dubbo:reference id="alertNotifyTmplService" interface="com.mhtech.platform.msrv.monitor.service.IAlertNotifyTmplService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />	
+    <dubbo:reference id="serverNotifyRuleService" interface="com.mhtech.platform.msrv.monitor.service.IServerNotifyRuleService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />	
+    <dubbo:reference id="iSpSpersonneService" interface="com.mhtech.platform.msrv.monitor.service.ISpSpersonneService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />	
+    <dubbo:reference id="monitorPlansService" interface="com.mhtech.platform.msrv.monitor.service.IMonitorPlansService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="hardwareTypeService" interface="com.mhtech.platform.msrv.monitor.service.IHardwareTypeService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="propertyService" interface="com.mhtech.platform.msrv.monitor.service.IPropertyService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference id="serverDiagramService" interface="com.mhtech.platform.msrv.monitor.service.IServerDiagramService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    
+    <!-- 手机定位平台 -->
+    <dubbo:reference interface="com.mobile.service.UserService" id="userService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />   	 
+    <dubbo:reference interface="com.mobile.service.CallRecordsService" id="callRecordsService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}"  />
+	<dubbo:reference interface="com.mobile.service.ParameterService" id="parameterService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}"  />
+    <dubbo:reference interface="com.mobile.service.EmailService" id="emailService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}"  />
+	<dubbo:reference interface="com.mobile.service.SMSService" id="sMSService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}"  />
+	<dubbo:reference interface="com.mobile.service.MobileService" id="mobileService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}"  />
+	<dubbo:reference interface="com.mobile.service.CustomerPackageService" id="customerPackageService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}"  />
+	<dubbo:reference interface="com.mobile.service.CustomerContactService" id="customerContactService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}"  />
+	<dubbo:reference interface="com.mobile.service.CustomerInterfaceService"	id="customerInterfaceService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}"  />
+	<dubbo:reference interface="com.mobile.service.CustomerMobilesService" id="customerMobilesService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}"  />
+	<dubbo:reference interface="com.mobile.service.CustomerService" id="customerService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}"  />
+	<dubbo:reference interface="com.mobile.service.ElementvaliDateService" id="elementvaliDateService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}"  />
+	<dubbo:reference interface="com.mobile.service.FaceInformationService" id="faceInformationService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference interface="com.mobile.service.OrgFuncService" id="orgFuncService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" /> 
+    <dubbo:reference interface="com.mobile.service.UserPowerService" id="userPowerService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    <dubbo:reference interface="com.mobile.service.CompanyService" id="companyService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" /> 
+    <dubbo:reference interface="com.mobile.service.OrganizatService" id="organizatService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" /> 
+	<dubbo:reference interface="com.mobile.service.SysPowerService" id="sysPowerService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" /> 
+ 	<dubbo:reference interface="com.mobile.service.SysRoleService" id="sysRoleService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+ 	<dubbo:reference interface="com.mobile.service.SMSCallbackRecordService" id="SMSCallbackRecordService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+ 	<dubbo:reference interface="com.mobile.service.AsynProcesService" id="AsynProcesService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+ 	<dubbo:reference interface="com.mobile.service.TaskService" id="MTaskService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+ 	<dubbo:reference interface="com.mobile.service.RedisService" id="redisService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />
+    
+    <!-- algorithm -->
+    <dubbo:reference interface="com.mhtech.platform.msrv.algorithm.service.IProjectDetailsHomepage" id="iProjectDetailsHomepage" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />   	 
+    <dubbo:reference interface="com.mhtech.platform.msrv.algorithm.service.IAlTeamMemberService" id="iAlTeamMemberService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />   	 
+    <dubbo:reference interface="com.mhtech.platform.msrv.algorithm.service.IAlProjectMemberService" id="iAlProjectMemberService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />   	 
+    <dubbo:reference interface="com.mhtech.platform.msrv.algorithm.service.IAlTeamWorkService" id="iAlTeamWorkService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />   	 
+    <dubbo:reference interface="com.mhtech.platform.msrv.algorithm.service.AnalyzeFlowRpcCaller" id="analyzeFlowRpcCaller" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />   	 
+    <dubbo:reference interface="com.mhtech.platform.msrv.algorithm.service.DataSetRpcCaller" id="dataSetRpcCaller" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />   	 
+    <dubbo:reference interface="com.mhtech.platform.msrv.algorithm.service.OperatorRpcCaller" id="operatorRpcHandler" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />   	 
+    <dubbo:reference interface="com.mhtech.platform.msrv.algorithm.service.IAlProjectLogMapperService" id="iAlProjectLogMapperService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />   	 
+   
+    <dubbo:reference interface="com.mhtech.platform.msrv.algorithm.service.IAlSignMapperService" id="iAlSignMapperService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />   	 
+     
+     <!-- 登录和权限 -->
+     <dubbo:reference interface="com.mhtech.platform.msrv.auth.login.service.UserService" id="loginUserService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />  
+     <dubbo:reference interface="com.mhtech.platform.msrv.auth.login.service.UserPowerService" id="loginUserPowerService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />  
+     <dubbo:reference interface="com.mhtech.platform.msrv.auth.login.service.SysRoleService" id="loginSysRoleService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />  
+     <dubbo:reference interface="com.mhtech.platform.msrv.auth.login.service.SysPowerService" id="loginSysPowerService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />  
+     <dubbo:reference interface="com.mhtech.platform.msrv.auth.login.service.SpUserService" id="loginSpUserService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />  
+     <dubbo:reference interface="com.mhtech.platform.msrv.auth.login.service.EmailService" id="loginEmailService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />  
+     <dubbo:reference interface="com.mhtech.platform.msrv.auth.login.service.OrgFuncService" id="loginOrgFuncService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" /> 
+     <dubbo:reference interface="com.mhtech.platform.msrv.auth.login.service.SMSService" id="loginSMSService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />  
+     <!-- 登录和权限 -->  
+    
+    <dubbo:reference interface="com.tools.modules.service.SecurityService" id="securityService" timeout="${dubbo.default.wait}" check="${dubbo.default.check}" retries="${dubbo.default.retries}" />  
+    <!-- 消费 日志 过滤器 -->
+    <dubbo:consumer filter="ConsumptionLogFilter" /> 
+</beans>

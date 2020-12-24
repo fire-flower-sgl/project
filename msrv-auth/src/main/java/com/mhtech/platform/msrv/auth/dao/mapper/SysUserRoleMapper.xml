@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.auth.dao.mapper.SysUserRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.auth.dao.model.SysUserRole" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="role_num" property="roleNum" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_code, role_num
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user_role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  
+  
+  
+  <!-- 按userCode删除 -->
+  <delete id="deleteUser" parameterType="java.lang.String" >
+    delete from sys_user_role   where  user_code= #{userCode}
+  </delete>
+  <!-- 批量新增 -->
+  <insert id="insertList">
+      INSERT INTO sys_user_role(id, user_code, role_num)
+      VALUES
+      <foreach collection="list" item="item" separator=",">
+           (#{item.id},#{item.userCode},#{item.roleNum})
+      </foreach>
+  </insert>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_user_role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysUserRole" >
+    insert into sys_user_role (id, user_code, role_num
+      )
+    values (#{id,jdbcType=BIGINT}, #{userCode,jdbcType=VARCHAR}, #{roleNum,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysUserRole" >
+    insert into sys_user_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userCode != null" >
+        user_code,
+      </if>
+      <if test="roleNum != null" >
+        role_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleNum != null" >
+        #{roleNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysUserRole" >
+    update sys_user_role
+    <set >
+      <if test="userCode != null" >
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleNum != null" >
+        role_num = #{roleNum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysUserRole" >
+    update sys_user_role
+    set user_code = #{userCode,jdbcType=VARCHAR},
+      role_num = #{roleNum,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectRoleNumsByUserCode" resultType="java.lang.String" parameterType="java.lang.String" >
+    select  role_num  from sys_user_role   where user_code = #{userCode}
+  </select>
+</mapper>

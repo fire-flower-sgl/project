@@ -1,0 +1,1 @@
+ConsumptionLogFilter=com.mhtech.platform.msrv.gateway.dubbo.filter.ConsumptionLogFilter

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mhtech.platform.msrv.sharing.dao.mapper.AlertNotifyTmplMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.AlertNotifyTmpl">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="server_id" property="serverId" jdbcType="BIGINT" />
+		<result column="tmpl_code" property="tmplCode" jdbcType="VARCHAR" />
+		<result column="ext_1" property="ext1" jdbcType="VARCHAR" />
+		<result column="ext_2" property="ext2" jdbcType="VARCHAR" />
+		<result column="ext_3" property="ext3" jdbcType="VARCHAR" />
+		<result column="ext_4" property="ext4" jdbcType="VARCHAR" />
+		<result column="ext_5" property="ext5" jdbcType="VARCHAR" />
+		<result column="ext_6" property="ext6" jdbcType="VARCHAR" />
+		<result column="ext_7" property="ext7" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="BIT" />
+	</resultMap>
+	<resultMap id="EntityResultMap"
+		type="com.mhtech.platform.msrv.pojo.AlertNotifyTmpl">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="server_id" property="serverId" jdbcType="BIGINT" />
+		<result column="tmpl_code" property="tmplCode" jdbcType="VARCHAR" />
+		<result column="tmpl_conent" property="tmplConent" jdbcType="LONGVARCHAR" />
+		<result column="ext_1" property="ext1" jdbcType="VARCHAR" />
+		<result column="ext_2" property="ext2" jdbcType="VARCHAR" />
+		<result column="ext_3" property="ext3" jdbcType="VARCHAR" />
+		<result column="ext_4" property="ext4" jdbcType="VARCHAR" />
+		<result column="ext_5" property="ext5" jdbcType="VARCHAR" />
+		<result column="ext_6" property="ext6" jdbcType="VARCHAR" />
+		<result column="ext_7" property="ext7" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="BIT" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.mhtech.platform.msrv.sharing.dao.model.AlertNotifyTmpl"
+		extends="BaseResultMap">
+		<result column="tmpl_conent" property="tmplConent" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, server_id, tmpl_code, ext_1, ext_2, ext_3, ext_4, ext_5, ext_6, ext_7, status
+	</sql>
+	<sql id="Blob_Column_List">
+		tmpl_conent
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from sp_alert_notify_tmpl
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from sp_alert_notify_tmpl
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.AlertNotifyTmpl">
+		insert into sp_alert_notify_tmpl (id, server_id, tmpl_code,
+		ext_1, ext_2, ext_3, ext_4,
+		ext_5, ext_6, ext_7, status, tmpl_conent
+		)
+		values (#{id,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT},
+		#{tmplCode,jdbcType=VARCHAR},
+		#{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR},
+		#{ext4,jdbcType=VARCHAR},
+		#{ext5,jdbcType=VARCHAR}, #{ext6,jdbcType=VARCHAR}, #{ext7,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, #{tmplConent,jdbcType=LONGVARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.AlertNotifyTmpl">
+		insert into sp_alert_notify_tmpl
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="serverId != null">
+				server_id,
+			</if>
+			<if test="tmplCode != null">
+				tmpl_code,
+			</if>
+			<if test="ext1 != null">
+				ext_1,
+			</if>
+			<if test="ext2 != null">
+				ext_2,
+			</if>
+			<if test="ext3 != null">
+				ext_3,
+			</if>
+			<if test="ext4 != null">
+				ext_4,
+			</if>
+			<if test="ext5 != null">
+				ext_5,
+			</if>
+			<if test="ext6 != null">
+				ext_6,
+			</if>
+			<if test="ext7 != null">
+				ext_7,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="tmplConent != null">
+				tmpl_conent,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="serverId != null">
+				#{serverId,jdbcType=BIGINT},
+			</if>
+			<if test="tmplCode != null">
+				#{tmplCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ext1 != null">
+				#{ext1,jdbcType=VARCHAR},
+			</if>
+			<if test="ext2 != null">
+				#{ext2,jdbcType=VARCHAR},
+			</if>
+			<if test="ext3 != null">
+				#{ext3,jdbcType=VARCHAR},
+			</if>
+			<if test="ext4 != null">
+				#{ext4,jdbcType=VARCHAR},
+			</if>
+			<if test="ext5 != null">
+				#{ext5,jdbcType=VARCHAR},
+			</if>
+			<if test="ext6 != null">
+				#{ext6,jdbcType=VARCHAR},
+			</if>
+			<if test="ext7 != null">
+				#{ext7,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=BIT},
+			</if>
+			<if test="tmplConent != null">
+				#{tmplConent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.AlertNotifyTmpl">
+		update sp_alert_notify_tmpl
+		<set>
+			<if test="serverId != null">
+				server_id = #{serverId,jdbcType=BIGINT},
+			</if>
+			<if test="tmplCode != null">
+				tmpl_code = #{tmplCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ext1 != null">
+				ext_1 = #{ext1,jdbcType=VARCHAR},
+			</if>
+			<if test="ext2 != null">
+				ext_2 = #{ext2,jdbcType=VARCHAR},
+			</if>
+			<if test="ext3 != null">
+				ext_3 = #{ext3,jdbcType=VARCHAR},
+			</if>
+			<if test="ext4 != null">
+				ext_4 = #{ext4,jdbcType=VARCHAR},
+			</if>
+			<if test="ext5 != null">
+				ext_5 = #{ext5,jdbcType=VARCHAR},
+			</if>
+			<if test="ext6 != null">
+				ext_6 = #{ext6,jdbcType=VARCHAR},
+			</if>
+			<if test="ext7 != null">
+				ext_7 = #{ext7,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=BIT},
+			</if>
+			<if test="tmplConent != null">
+				tmpl_conent = #{tmplConent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.AlertNotifyTmpl">
+		update sp_alert_notify_tmpl
+		set server_id = #{serverId,jdbcType=BIGINT},
+		tmpl_code = #{tmplCode,jdbcType=VARCHAR},
+		ext_1 = #{ext1,jdbcType=VARCHAR},
+		ext_2 = #{ext2,jdbcType=VARCHAR},
+		ext_3 = #{ext3,jdbcType=VARCHAR},
+		ext_4 = #{ext4,jdbcType=VARCHAR},
+		ext_5 = #{ext5,jdbcType=VARCHAR},
+		ext_6 = #{ext6,jdbcType=VARCHAR},
+		ext_7 = #{ext7,jdbcType=VARCHAR},
+		status = #{status,jdbcType=BIT},
+		tmpl_conent = #{tmplConent,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.AlertNotifyTmpl">
+		update sp_alert_notify_tmpl
+		set server_id = #{serverId,jdbcType=BIGINT},
+		tmpl_code = #{tmplCode,jdbcType=VARCHAR},
+		ext_1 = #{ext1,jdbcType=VARCHAR},
+		ext_2 = #{ext2,jdbcType=VARCHAR},
+		ext_3 = #{ext3,jdbcType=VARCHAR},
+		ext_4 = #{ext4,jdbcType=VARCHAR},
+		ext_5 = #{ext5,jdbcType=VARCHAR},
+		ext_6 = #{ext6,jdbcType=VARCHAR},
+		ext_7 = #{ext7,jdbcType=VARCHAR},
+		status = #{status,jdbcType=BIT}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectEntities" resultMap="EntityResultMap"
+		parameterType="com.mhtech.platform.msrv.sharing.dao.model.AlertNotifyTmpl">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from sp_alert_notify_tmpl
+		where 1 = 1
+			<if test="serverId != null">
+				and server_id = #{serverId,jdbcType=BIGINT}
+			</if>
+			<if test="tmplCode != null">
+				and tmpl_code = #{tmplCode,jdbcType=VARCHAR}
+			</if>
+			<if test="ext1 != null">
+				and ext_1 = #{ext1,jdbcType=VARCHAR}
+			</if>
+			<if test="ext2 != null">
+				and ext_2 = #{ext2,jdbcType=VARCHAR}
+			</if>
+			<if test="ext3 != null">
+				and ext_3 = #{ext3,jdbcType=VARCHAR}
+			</if>
+			<if test="ext4 != null">
+				and ext_4 = #{ext4,jdbcType=VARCHAR}
+			</if>
+			<if test="ext5 != null">
+				and ext_5 = #{ext5,jdbcType=VARCHAR}
+			</if>
+			<if test="ext6 != null">
+				and ext_6 = #{ext6,jdbcType=VARCHAR}
+			</if>
+			<if test="ext7 != null">
+				and ext_7 = #{ext6,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null">
+				and status = #{status,jdbcType=BIT}
+			</if>
+	</select>
+</mapper>

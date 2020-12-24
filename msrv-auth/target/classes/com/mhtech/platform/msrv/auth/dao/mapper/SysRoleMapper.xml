@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.auth.dao.mapper.SysRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.auth.dao.model.SysRole" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="role_num" property="roleNum" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_user" property="roleUser" jdbcType="VARCHAR" />
+    <result column="role_update_time" property="roleUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="role_update_user" property="roleUpdateUser" jdbcType="VARCHAR" />
+    <result column="is_use" property="isUse" jdbcType="VARCHAR" />
+    <result column="role_remark" property="roleRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, role_num, role_name, role_user, role_update_time, role_update_user, is_use, role_remark
+  </sql>
+  
+
+  
+  
+  <select id="findSysPowerOne" resultType="boolean" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRole" >
+        <![CDATA[   SELECT COUNT(1) from sys_role where  role_num=#{roleNum} ]]>
+  </select>
+
+  
+  <select id="listRole" resultMap="BaseResultMap" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRole" >
+           <!-- SELECT a.id,a.role_num,a.role_name,a.role_user,a.role_update_time,a.role_update_user,a.role_remark ,b.parm_name as is_use
+           FROM  sys_role a LEFT JOIN sys_parameter b on a.is_use=b.parm_code and b.parm_type='yseNo' -->
+           SELECT id,role_num,role_name,role_user,role_update_time,role_update_user,role_remark , is_use FROM sys_role 
+           where 1=1 
+            <if test=" roleNum !=null ">
+		       and role_num like CONCAT('%',#{roleNum},'%') 
+		       or  role_name like CONCAT('%',#{roleNum},'%')
+		    </if>      
+  </select>
+  <select id="totalCount"  resultType="java.lang.Integer" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRole" >
+           SELECT COUNT(1) FROM sys_role
+           <where>
+	            <if test=" roleNum !=null ">
+			       role_num like CONCAT('%',#{roleNum},'%')  or  role_name like CONCAT('%',#{roleNum},'%')
+			    </if>    
+		   </where>  
+  </select>
+  
+  
+  
+  <select id="selectRoleNum" resultType="java.lang.String" parameterType="java.lang.String" >
+        SELECT  MAX(role_num) role_num  from  sys_role where role_user=#{roleUser}
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select  <include refid="Base_Column_List" /> from sys_role 
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_role
+    where role_num = #{roleNum} and is_use='0'
+  </delete>
+  
+  
+  <insert id="insert" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRole" >
+    insert into sys_role (id, role_num, role_name, 
+      role_user, role_update_time, role_update_user, 
+      is_use, role_remark)
+    values (#{id,jdbcType=BIGINT}, #{roleNum,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, 
+      #{roleUser,jdbcType=VARCHAR}, #{roleUpdateTime,jdbcType=TIMESTAMP}, #{roleUpdateUser,jdbcType=VARCHAR}, 
+      #{isUse,jdbcType=VARCHAR}, #{roleRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRole" >
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleNum != null" >
+        role_num,
+      </if>
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="roleUser != null" >
+        role_user,
+      </if>
+        role_update_time,
+      <if test="roleUpdateUser != null" >
+        role_update_user,
+      </if>
+        is_use,
+      <if test="roleRemark != null" >
+        role_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="roleNum != null" >
+        #{roleNum,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleUser != null" >
+        #{roleUser,jdbcType=VARCHAR},
+      </if>
+      <if test="roleUpdateTime == null" >
+         now(),
+      </if>
+      <if test="roleUpdateTime != null" >
+         #{roleUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roleUpdateUser != null" >
+        #{roleUpdateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isUse != null" >
+        #{isUse,jdbcType=VARCHAR},
+      </if>
+      <if test="isUse == null" >
+        "1",
+      </if>
+      <if test="roleRemark != null" >
+        #{roleRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRole" >
+    update sys_role
+    <set >
+      <if test="roleNum != null" >
+        role_num = #{roleNum,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null" >
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleUser != null" >
+        role_user = #{roleUser,jdbcType=VARCHAR},
+      </if>
+      <if test="roleUpdateTime != null" >
+        role_update_time = #{roleUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roleUpdateTime == null" >
+        role_update_time = now(),
+      </if>
+      <if test="roleUpdateUser != null" >
+        role_update_user = #{roleUpdateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isUse != null" >
+        is_use = #{isUse,jdbcType=VARCHAR},
+      </if>
+      <if test="roleRemark != null" >
+        role_remark = #{roleRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRole" >
+    update sys_role
+    set role_num = #{roleNum,jdbcType=VARCHAR},
+      role_name = #{roleName,jdbcType=VARCHAR},
+      role_user = #{roleUser,jdbcType=VARCHAR},
+      role_update_time = #{roleUpdateTime,jdbcType=TIMESTAMP},
+      role_update_user = #{roleUpdateUser,jdbcType=VARCHAR},
+      is_use = #{isUse,jdbcType=VARCHAR},
+      role_remark = #{roleRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

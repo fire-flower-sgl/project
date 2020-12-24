@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.DictMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.sharing.dao.model.Dict">
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="value" property="value" jdbcType="VARCHAR" />
+		<result column="dict_type" property="dictType" jdbcType="VARCHAR" />
+		<result column="fixed" property="fixed" jdbcType="BIT" />
+	</resultMap>
+	<resultMap type="com.mhtech.platform.msrv.pojo.DictVO" id="ListDictResultMap">
+		<result column="name" property="dictName" jdbcType="VARCHAR" />
+		<result column="value" property="dictValue" jdbcType="VARCHAR" />
+		<result column="dict_type" property="dictType" jdbcType="VARCHAR" />
+	</resultMap>
+	<insert id="insert" parameterType="com.mhtech.platform.msrv.sharing.dao.model.Dict">
+		insert into sp_dict (name, value, dict_type,
+		fixed)
+		values (#{name,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR},
+		#{dictType,jdbcType=VARCHAR},
+		#{fixed,jdbcType=BIT})
+	</insert>
+	<insert id="insertSelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.Dict">
+		insert into sp_dict
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				name,
+			</if>
+			<if test="value != null">
+				value,
+			</if>
+			<if test="dictType != null">
+				dict_type,
+			</if>
+			<if test="fixed != null">
+				fixed,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				#{value,jdbcType=VARCHAR},
+			</if>
+			<if test="dictType != null">
+				#{dictType,jdbcType=VARCHAR},
+			</if>
+			<if test="fixed != null">
+				#{fixed,jdbcType=BIT},
+			</if>
+		</trim>
+	</insert>
+	<select id="listDictByTypes" parameterType="list" resultMap="ListDictResultMap">
+		SELECT d.`name`, d.`value`, d.`dict_type` from 
+			sp_dict_type t left join sp_dict d on t.dict_type = d.dict_type
+		where t.dict_type in 
+		<foreach collection="list" close=")" item="type" open="(" separator="," >
+			#{type,jdbcType=VARCHAR}
+		</foreach>
+		order by dict_type, `sort`
+	</select>
+</mapper>

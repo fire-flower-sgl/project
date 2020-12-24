@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.ParamAlertMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.sharing.dao.model.ParamAlert" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="server_id" property="serverId" jdbcType="BIGINT" />
+    <result column="param_name" property="paramName" jdbcType="VARCHAR" />
+    <result column="param_alias" property="paramAlias" jdbcType="VARCHAR" />
+    <result column="alter_value" property="alterValue" jdbcType="DECIMAL" />
+    <result column="alert_code" property="alertCode" jdbcType="VARCHAR" />
+    <result column="alert_type" property="alertType" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="server_type" property="serverType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, server_id, param_name, param_alias, alter_value, alert_code, alert_type, status, created_time, server_type
+  </sql>
+  
+  
+  
+  
+  
+  
+  <select id="selectSum" resultType="java.lang.Integer" parameterType="com.mhtech.platform.log.pojo.ParamAlertDTO" >
+	  SELECT COUNT(id) from sp_param_alert  
+	     <where>
+	            <if test="id!=null"> and id=#{id} </if>
+				<if test="serverId!=null">and server_id=#{serverId}</if>
+				<if test="paramName">and param_name=#{paramName}</if>
+				<if test="paramAlias!=null">and param_alias=#{paramAlias}</if>
+				<if test="alterValue!=null">and alter_value=#{alterValue}</if>
+				<if test="alertCode!=null">and alert_code=#{alert_code}</if>
+				<if test="alertType!=null">and alert_type=#{alertType}</if>
+				<if test="status!=null">  and status=#{status} </if>
+				<if test="topTime!=null">  and created_time &gt;=#{topTime} </if>
+				<if test="endTime!=null">  and created_time &lt; =#{endTime} </if>
+	     </where>
+  </select>
+  
+  <select id="selectParamAlert" resultMap="BaseResultMap" parameterType="com.mhtech.platform.log.pojo.ParamAlertDTO" >
+     SELECT * from sp_param_alert  
+     <where>
+            <if test="id!=null"> and id=#{id} </if>
+			<if test="serverId!=null">and server_id=#{serverId}</if>
+			<if test="paramName">and param_name=#{paramName}</if>
+			<if test="paramAlias!=null">and param_alias=#{paramAlias}</if>
+			<if test="alterValue!=null">and alter_value=#{alterValue}</if>
+			<if test="alertCode!=null">and alert_code=#{alert_code}</if>
+			<if test="alertType!=null">and alert_type=#{alertType}</if>
+			<if test="status!=null">  and status=#{status} </if>
+			<if test="topTime!=null">  and created_time &gt;=#{topTime} </if>
+			<if test="endTime!=null">  and created_time &lt; =#{endTime} </if>
+     </where>
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sp_param_alert
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sp_param_alert
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mhtech.platform.msrv.sharing.dao.model.ParamAlert" >
+    insert into sp_param_alert (id, server_id, param_name, 
+      param_alias, alter_value, alert_code, alert_type, status, 
+      created_time)
+    values (#{id,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT}, #{paramName,jdbcType=VARCHAR}, 
+      #{paramAlias,jdbcType=VARCHAR}, #{alterValue,jdbcType=DECIMAL}, #{alertCode,jdbcType=VARCHAR}, #{alertType,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT}, 
+      #{createdTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.ParamAlert" >
+    insert into sp_param_alert
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="serverId != null" >
+        server_id,
+      </if>
+      <if test="paramName != null" >
+        param_name,
+      </if>
+      <if test="paramAlias != null" >
+        param_alias,
+      </if>
+      <if test="alterValue != null" >
+        alter_value,
+      </if>
+      <if test="alertCode != null" >
+        alert_code,
+      </if>
+      <if test="alertType != null" >
+        alert_type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="serverId != null" >
+        #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="paramName != null" >
+        #{paramName,jdbcType=VARCHAR},
+      </if>
+      <if test="paramAlias != null" >
+        #{paramAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="alterValue != null" >
+        #{alterValue,jdbcType=DECIMAL},
+      </if>
+      <if test="alertCode != null" >
+        #{alertCode,jdbcType=VARCHAR},
+      </if>
+      <if test="alertType != null" >
+        #{alertType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.ParamAlert" >
+    update sp_param_alert
+    <set >
+      <if test="serverId != null" >
+        server_id = #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="paramName != null" >
+        param_name = #{paramName,jdbcType=VARCHAR},
+      </if>
+      <if test="paramAlias != null" >
+        param_alias = #{paramAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="alterValue != null" >
+        alter_value = #{alterValue,jdbcType=DECIMAL},
+      </if>
+      <if test="alertCode != null" >
+        alert_code = #{alertCode,jdbcType=VARCHAR},
+      </if>
+      <if test="alertType != null" >
+        alert_type = #{alertType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.sharing.dao.model.ParamAlert" >
+    update sp_param_alert
+    set server_id = #{serverId,jdbcType=BIGINT},
+      param_name = #{paramName,jdbcType=VARCHAR},
+      param_alias = #{paramAlias,jdbcType=VARCHAR},
+      alter_value = #{alterValue,jdbcType=DECIMAL},
+      alert_code = #{alertCode,jdbcType=VARCHAR},
+      alert_type = #{alertType,jdbcType=VARCHAR},
+      status = #{status,jdbcType=SMALLINT},
+      created_time = #{createdTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryServerId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sp_param_alert
+    where server_id = #{serverId,jdbcType=BIGINT}
+  </select>
+</mapper>

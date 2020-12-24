@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.ServerChkRuleMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.sharing.dao.model.ServerChkRule" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="server_id" property="serverId" jdbcType="BIGINT" />
+    <result column="method" property="method" jdbcType="SMALLINT" />
+    <result column="uri" property="uri" jdbcType="VARCHAR" />
+    <result column="port" property="port" jdbcType="SMALLINT" />
+    <result column="json_field_check" property="jsonFieldCheck" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.mhtech.platform.msrv.sharing.dao.model.ServerChkRuleWithBLOBs" extends="BaseResultMap" >
+    <result column="http_headers" property="httpHeaders" jdbcType="LONGVARCHAR" />
+    <result column="http_request_body" property="httpRequestBody" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, server_id, method, uri, port, json_field_check, status, created_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    http_headers, http_request_body
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sp_server_chk_rule
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.mhtech.platform.log.pojo.ServerChkRuleDTO" >
+    delete from sp_server_chk_rule where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.mhtech.platform.log.pojo.ServerChkRuleDTO" >
+    insert into sp_server_chk_rule (id, server_id, method, 
+      uri, port, status, 
+      created_time, http_headers, http_request_body, json_field_check
+      )
+    values (#{id}, #{serverId}, #{method}, #{uri,jdbcType=VARCHAR}, #{port,jdbcType=SMALLINT}, #{status}, 
+      now(), #{httpHeaders}, #{httpRequestBody},#{jsonFieldCheck}
+      )
+  </insert>
+   <insert id="insertSelective" parameterType="com.mhtech.platform.log.pojo.ServerChkRuleDTO" >
+    insert into sp_server_chk_rule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="serverId != null" >
+        server_id,
+      </if>
+      <if test="method != null" >
+        method,
+      </if>
+      <if test="uri != null" >
+        uri,
+      </if>
+      <if test="port != null" >
+        port,
+      </if>
+      <if test="jsonFieldCheck != null" >
+        json_field_check,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createdTime == null" >
+        created_time,
+      </if>
+      <if test="httpHeaders != null" >
+        http_headers,
+      </if>
+      <if test="httpRequestBody != null" >
+        http_request_body,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="serverId != null" >
+        #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="method != null" >
+        #{method,jdbcType=SMALLINT},
+      </if>
+      <if test="uri != null" >
+        #{uri,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        #{port,jdbcType=SMALLINT},
+      </if>
+      <if test="jsonFieldCheck != null" >
+        #{jsonFieldCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createdTime == null" >
+       now(),
+      </if>
+      <if test="httpHeaders != null" >
+        #{httpHeaders,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="httpRequestBody != null" >
+        #{httpRequestBody,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerChkRuleWithBLOBs" >
+    update sp_server_chk_rule
+    <set >
+      <if test="serverId != null" >
+        server_id = #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="method != null" >
+        method = #{method,jdbcType=SMALLINT},
+      </if>
+      <if test="uri != null" >
+        uri = #{uri,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        port = #{port,jdbcType=SMALLINT},
+      </if>
+      <if test="jsonFieldCheck != null" >
+        json_field_check = #{jsonFieldCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="httpHeaders != null" >
+        http_headers = #{httpHeaders,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="httpRequestBody != null" >
+        http_request_body = #{httpRequestBody,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.mhtech.platform.msrv.sharing.dao.model.ServerChkRuleWithBLOBs" >
+    update sp_server_chk_rule
+    set server_id = #{serverId,jdbcType=BIGINT},
+      method = #{method,jdbcType=SMALLINT},
+      uri = #{uri,jdbcType=VARCHAR},
+      port = #{port,jdbcType=SMALLINT},
+      json_field_check = #{jsonFieldCheck,jdbcType=VARCHAR},
+      status = #{status,jdbcType=SMALLINT},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      http_headers = #{httpHeaders,jdbcType=LONGVARCHAR},
+      http_request_body = #{httpRequestBody,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mhtech.platform.log.pojo.ServerChkRuleDTO" >
+    update sp_server_chk_rule
+    <set >
+      <if test="serverId != null" >
+        server_id = #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="method != null" >
+        method = #{method,jdbcType=SMALLINT},
+      </if>
+      <if test="uri != null" >
+        uri = #{uri,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        port = #{port,jdbcType=SMALLINT},
+      </if>
+      <if test="jsonFieldCheck != null" >
+        json_field_check = #{jsonFieldCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createdTime == null" >
+        created_time = now(),
+      </if>
+      <if test="httpHeaders != null" >
+        http_headers = #{httpHeaders,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="httpRequestBody != null" >
+        http_request_body = #{httpRequestBody,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="findAll" resultMap="ResultMapWithBLOBs" parameterType="com.mhtech.platform.log.pojo.ServerChkRuleDTO" >
+	select 
+		<include refid="Base_Column_List" />
+	    ,
+	    <include refid="Blob_Column_List" />
+	from sp_server_chk_rule  where 1 = 1 
+		<if test=" method != '' and method != null  ">
+			and  method = #{method}
+		</if>
+	ORDER BY created_time DESC
+  </select>
+    <select id="findList" resultMap="ResultMapWithBLOBs" >
+	select 
+		<include refid="Base_Column_List" />
+	    ,
+	    <include refid="Blob_Column_List" />
+	from sp_server_chk_rule where status = 1 ORDER BY created_time 
+  </select>
+</mapper>

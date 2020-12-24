@@ -1,0 +1,2 @@
+ProvideLogFilter=com.mhtech.platform.msrv.auth.dubbo.filter.ProvideLogFilter
+ConsumptionLogFilter=com.mhtech.platform.msrv.auth.dubbo.filter.ConsumptionLogFilter

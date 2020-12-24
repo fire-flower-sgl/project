@@ -1,0 +1,1 @@
+providerFilter=com.mhtech.platform.msrv.sharing.service.dubbo.filter.RecordProviderFilter

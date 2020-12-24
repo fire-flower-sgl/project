@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.MsrvLogMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.sharing.dao.model.MsrvLog" >
+    <id column="log_id" property="logId" jdbcType="BIGINT" />
+    <result column="trace_id" property="traceId" jdbcType="BIGINT" />
+    <result column="side" property="side" jdbcType="BIT" />
+    <result column="application" property="application" jdbcType="VARCHAR" />
+    <result column="interface_name" property="interfaceName" jdbcType="VARCHAR" />
+    <result column="methods" property="methods" jdbcType="VARCHAR" />
+    <result column="host" property="host" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="arguments" property="arguments" jdbcType="LONGVARCHAR" />
+    
+
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.mhtech.platform.msrv.sharing.dao.model.MsrvLog" extends="BaseResultMap" >
+    <result column="arguments" property="arguments" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    log_id, trace_id, side, application, interface_name, methods, host, created_time
+  </sql>
+  <sql id="log" >
+    log_id, trace_id, side, arguments,application, interface_name, methods, host, created_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    arguments
+  </sql>
+  
+  
+  
+  <select id="sjSize" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select COUNT(log_id) from  sys_msrv_log where created_time BETWEEN #{topTime} and #{endTime}
+  </select>
+  
+  <select id="allLog" resultMap="BaseResultMap" >
+		select * from sys_msrv_log where log_id &lt;= #{max} and log_id &gt;= #{min} limit #{eachItem};
+  </select>
+  
+  <select id="selectManMin" resultType="Map" parameterType="com.mhtech.platform.msrv.sharing.request.LogDTO">
+      select MAX(log_id) `max` , MIN(log_id) `min`,COUNT(log_id) size from  sys_msrv_log where created_time BETWEEN #{topTime} and #{endTime}
+  </select>
+  
+   <delete id="deleteDate" parameterType="java.lang.String">
+		DELETE from sys_msrv_log where created_time BETWEEN #{topTime} and #{endTime}
+	</delete>
+  
+   <delete id="delete" parameterType="java.lang.Integer" >
+      DELETE from  sys_msrv_log where date(created_time)=date_sub(curdate(),interval #{day} day);
+   </delete>
+  
+  
+  <select id="selectLog" resultMap="BaseResultMap" parameterType="com.mhtech.platform.log.pojo.MsrvLogDTO">
+		SELECT * from sys_msrv_log
+		<where>
+			<if test="logId!=null"> log_id=#{logId} </if>
+			<if test="traceId!=null">and trace_id=#{traceId}</if>
+			<if test="arguments!=null">and arguments=#{arguments}</if>
+			<if test="application!=null">and application=#{application}</if>
+			<if test="interfaceName!=null">and interface_name=#{interfaceName}</if>
+			<if test="methods!=null">and methods=#{methods}</if>
+			<if test="host!=null">and host=#{host}</if>
+			<if test="topTime!=null">  and created_time &gt;=#{topTime} </if>
+			<if test="endTime!=null">  and created_time &lt; =#{endTime} </if>
+		</where>
+	</select>
+	<select id="selectLogSum" resultType="java.lang.Integer" parameterType="com.mhtech.platform.log.pojo.MsrvLogDTO">
+		SELECT COUNT(log_id) from sys_msrv_log
+		<where>
+			<if test="logId!=null"> and log_id=#{logId} </if>
+			<if test="traceId!=null">and trace_id=#{traceId}</if>
+			<if test="arguments!=null">and arguments=#{arguments}</if>
+			<if test="application!=null">and application=#{application}</if>
+			<if test="interfaceName!=null">and interface_name=#{interfaceName}</if>
+			<if test="methods!=null">and methods=#{methods}</if>
+			<if test="host!=null">and host=#{host}</if>
+			<if test="topTime!=null">  and created_time &gt;=#{topTime} </if>
+			<if test="endTime!=null">  and created_time &lt; =#{endTime} </if>
+		</where>
+	</select>
+	
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_msrv_log
+    where log_id = #{logId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sys_msrv_log
+    where log_id = #{logId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mhtech.platform.msrv.sharing.dao.model.MsrvLog" >
+    insert into sys_msrv_log (log_id, trace_id, side, 
+      application, interface_name, methods, 
+      host, created_time, arguments
+      )
+    values (#{logId,jdbcType=BIGINT}, #{traceId,jdbcType=BIGINT}, #{side,jdbcType=BIT}, 
+      #{application,jdbcType=VARCHAR}, #{interfaceName,jdbcType=VARCHAR}, #{methods,jdbcType=VARCHAR}, 
+      #{host,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, #{arguments,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.MsrvLog" >
+    insert into sys_msrv_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        log_id,
+      </if>
+      <if test="traceId != null" >
+        trace_id,
+      </if>
+      <if test="side != null" >
+        side,
+      </if>
+      <if test="application != null" >
+        application,
+      </if>
+      <if test="interfaceName != null" >
+        interface_name,
+      </if>
+      <if test="methods != null" >
+        methods,
+      </if>
+      <if test="host != null" >
+        host,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="arguments != null" >
+        arguments,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        #{logId,jdbcType=BIGINT},
+      </if>
+      <if test="traceId != null" >
+        #{traceId,jdbcType=BIGINT},
+      </if>
+      <if test="side != null" >
+        #{side,jdbcType=BIT},
+      </if>
+      <if test="application != null" >
+        #{application,jdbcType=VARCHAR},
+      </if>
+      <if test="interfaceName != null" >
+        #{interfaceName,jdbcType=VARCHAR},
+      </if>
+      <if test="methods != null" >
+        #{methods,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null" >
+        #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="arguments != null" >
+        #{arguments,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.MsrvLog" >
+    update sys_msrv_log
+    <set >
+      <if test="traceId != null" >
+        trace_id = #{traceId,jdbcType=BIGINT},
+      </if>
+      <if test="side != null" >
+        side = #{side,jdbcType=BIT},
+      </if>
+      <if test="application != null" >
+        application = #{application,jdbcType=VARCHAR},
+      </if>
+      <if test="interfaceName != null" >
+        interface_name = #{interfaceName,jdbcType=VARCHAR},
+      </if>
+      <if test="methods != null" >
+        methods = #{methods,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null" >
+        host = #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="arguments != null" >
+        arguments = #{arguments,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where log_id = #{logId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.mhtech.platform.msrv.sharing.dao.model.MsrvLog" >
+    update sys_msrv_log
+    set trace_id = #{traceId,jdbcType=BIGINT},
+      side = #{side,jdbcType=BIT},
+      application = #{application,jdbcType=VARCHAR},
+      interface_name = #{interfaceName,jdbcType=VARCHAR},
+      methods = #{methods,jdbcType=VARCHAR},
+      host = #{host,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      arguments = #{arguments,jdbcType=LONGVARCHAR}
+    where log_id = #{logId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.sharing.dao.model.MsrvLog" >
+    update sys_msrv_log
+    set trace_id = #{traceId,jdbcType=BIGINT},
+      side = #{side,jdbcType=BIT},
+      application = #{application,jdbcType=VARCHAR},
+      interface_name = #{interfaceName,jdbcType=VARCHAR},
+      methods = #{methods,jdbcType=VARCHAR},
+      host = #{host,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP}
+    where log_id = #{logId,jdbcType=BIGINT}
+  </update>
+  <insert id="batchInsert" parameterType="com.mhtech.platform.msrv.sharing.dao.model.MsrvLog">
+    insert into sys_msrv_log (log_id, trace_id, side, application, interface_name, methods, host, created_time, arguments )  values 	
+  	  <foreach collection="list" item="obj" separator="," >
+	    (#{obj.logId,jdbcType=BIGINT}, #{obj.traceId,jdbcType=BIGINT}, #{obj.side,jdbcType=BIT}, 
+	      #{obj.application,jdbcType=VARCHAR}, #{obj.interfaceName,jdbcType=VARCHAR}, #{obj.methods,jdbcType=VARCHAR}, 
+	      #{obj.host,jdbcType=VARCHAR},now(), #{obj.arguments,jdbcType=LONGVARCHAR} )
+	  </foreach>
+  </insert>
+</mapper>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.auth.dao.mapper.SysSpePowerMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.auth.dao.model.SysSpePower" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="spe_num" property="speNum" jdbcType="VARCHAR" />
+    <result column="spe_name" property="speName" jdbcType="VARCHAR" />
+    <result column="spe_key" property="speKey" jdbcType="VARCHAR" />
+    <result column="spe_val" property="speVal" jdbcType="VARCHAR" />
+    <result column="spe_type" property="speType" jdbcType="VARCHAR" />
+    <result column="spe_use" property="speUse" jdbcType="VARCHAR" />
+    <result column="spe_remark" property="speRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_code, spe_num, spe_name, spe_key, spe_val, spe_type, spe_use, spe_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_spe_power
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  
+  
+  <select id="selectSpePower" resultMap="BaseResultMap" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysSpePower" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_spe_power
+    where user_code = #{userCode} and spe_num=#{speNum} 
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_spe_power
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysSpePower" >
+    insert into sys_spe_power (id, user_code, spe_num, 
+      spe_name, spe_key, spe_val, 
+      spe_type, spe_use, spe_remark
+      )
+    values (#{id,jdbcType=BIGINT}, #{userCode,jdbcType=VARCHAR}, #{speNum,jdbcType=VARCHAR}, 
+      #{speName,jdbcType=VARCHAR}, #{speKey,jdbcType=VARCHAR}, #{speVal,jdbcType=VARCHAR}, 
+      #{speType,jdbcType=VARCHAR}, #{speUse,jdbcType=VARCHAR}, #{speRemark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysSpePower" >
+    insert into sys_spe_power
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userCode != null" >
+        user_code,
+      </if>
+      <if test="speNum != null" >
+        spe_num,
+      </if>
+      <if test="speName != null" >
+        spe_name,
+      </if>
+      <if test="speKey != null" >
+        spe_key,
+      </if>
+      <if test="speVal != null" >
+        spe_val,
+      </if>
+      <if test="speType != null" >
+        spe_type,
+      </if>
+      <if test="speUse != null" >
+        spe_use,
+      </if>
+      <if test="speRemark != null" >
+        spe_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="speNum != null" >
+        #{speNum,jdbcType=VARCHAR},
+      </if>
+      <if test="speName != null" >
+        #{speName,jdbcType=VARCHAR},
+      </if>
+      <if test="speKey != null" >
+        #{speKey,jdbcType=VARCHAR},
+      </if>
+      <if test="speVal != null" >
+        #{speVal,jdbcType=VARCHAR},
+      </if>
+      <if test="speType != null" >
+        #{speType,jdbcType=VARCHAR},
+      </if>
+      <if test="speUse != null" >
+        #{speUse,jdbcType=VARCHAR},
+      </if>
+      <if test="speRemark != null" >
+        #{speRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysSpePower" >
+    update sys_spe_power
+    <set >
+      <if test="userCode != null" >
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="speNum != null" >
+        spe_num = #{speNum,jdbcType=VARCHAR},
+      </if>
+      <if test="speName != null" >
+        spe_name = #{speName,jdbcType=VARCHAR},
+      </if>
+      <if test="speKey != null" >
+        spe_key = #{speKey,jdbcType=VARCHAR},
+      </if>
+      <if test="speVal != null" >
+        spe_val = #{speVal,jdbcType=VARCHAR},
+      </if>
+      <if test="speType != null" >
+        spe_type = #{speType,jdbcType=VARCHAR},
+      </if>
+      <if test="speUse != null" >
+        spe_use = #{speUse,jdbcType=VARCHAR},
+      </if>
+      <if test="speRemark != null" >
+        spe_remark = #{speRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysSpePower" >
+    update sys_spe_power
+    set user_code = #{userCode,jdbcType=VARCHAR},
+      spe_num = #{speNum,jdbcType=VARCHAR},
+      spe_name = #{speName,jdbcType=VARCHAR},
+      spe_key = #{speKey,jdbcType=VARCHAR},
+      spe_val = #{speVal,jdbcType=VARCHAR},
+      spe_type = #{speType,jdbcType=VARCHAR},
+      spe_use = #{speUse,jdbcType=VARCHAR},
+      spe_remark = #{speRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

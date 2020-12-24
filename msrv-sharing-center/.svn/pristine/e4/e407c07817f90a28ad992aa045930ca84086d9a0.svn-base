@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.SysParameterMapper" >
+
+<select id="findParameterByParmType" resultType="java.util.HashMap" >
+    select parm_code as code ,parm_name value
+    from sys_parameter 
+    where parm_type=#{parmType}
+</select>
+  
+<select id="findParameterByParmCodeOrParmName" resultType="java.util.HashMap" >
+    select CONCAT(parm_code,'') as code ,parm_name value
+    from sys_parameter 
+    where parm_type=#{parmType}
+    <if test="parmCode != null" >
+    	and parm_code=#{parmCode}
+    </if>
+    <if test="parmName != null" >
+    	and parm_name=#{parmName}
+    </if>
+	    
+     
+</select>
+  
+</mapper>

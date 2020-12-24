@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mhtech.platform.msrv.auth.dao.mapper.SysRolePowerMapper">
+	<resultMap id="BaseResultMap"
+		type="com.mhtech.platform.msrv.auth.dao.model.SysRolePower">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="role_num" property="roleNum" jdbcType="VARCHAR" />
+		<result column="power_num" property="powerNum" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, role_num, power_num
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from sys_role_power
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	
+	
+	
+	
+	<insert id="insertAll" parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRolePower">
+	         INSERT INTO sys_role_power  
+	          (<include refid="Base_Column_List" />)
+	         VALUES 
+	         <foreach collection ="list" item="item" index="index" separator =",">
+		         (#{item.id}, #{item.roleNum}, #{item.powerNum})
+		    </foreach >
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<delete id="deleteRower"  parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRolePower">
+		DELETE from sys_role_power where role_num=#{roleNum}
+	</delete>
+	
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from sys_role_power
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRolePower">
+		insert into sys_role_power (id, role_num, power_num
+		)
+		values (#{id,jdbcType=BIGINT}, #{roleNum,jdbcType=VARCHAR},
+		#{powerNum,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRolePower">
+		insert into sys_role_power
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="roleNum != null">
+				role_num,
+			</if>
+			<if test="powerNum != null">
+				power_num,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="roleNum != null">
+				#{roleNum,jdbcType=VARCHAR},
+			</if>
+			<if test="powerNum != null">
+				#{powerNum,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRolePower">
+		update sys_role_power
+		<set>
+			<if test="roleNum != null">
+				role_num = #{roleNum,jdbcType=VARCHAR},
+			</if>
+			<if test="powerNum != null">
+				power_num = #{powerNum,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.mhtech.platform.msrv.auth.dao.model.SysRolePower">
+		update sys_role_power
+		set role_num = #{roleNum,jdbcType=VARCHAR},
+		power_num = #{powerNum,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectPowerNumsByRoles" resultType="java.lang.String">
+		select
+		power_num
+		from sys_role_power
+		where role_num in 
+		<foreach collection="roleNums" item="roleNum" index="index" open="("
+			close=")" separator=",">
+			#{roleNum, jdbcType=VARCHAR}
+		</foreach>
+	</select>
+</mapper>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mhtech.platform.msrv.sharing.dao.mapper.UserActionDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.mhtech.platform.msrv.sharing.dao.model.UserActionDetail" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="usr_act_id" property="usrActId" jdbcType="BIGINT" />
+    <result column="action_type" property="actionType" jdbcType="VARCHAR" />
+    <result column="action_sql_id" property="actionSqlId" jdbcType="LONGVARCHAR" />
+    <result column="sql_params" property="sqlParams" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.mhtech.platform.msrv.sharing.dao.model.UserActionDetailWithBLOBs" extends="BaseResultMap" >
+    <result column="action_sql_id" property="actionSqlId" jdbcType="LONGVARCHAR" />
+    <result column="sql_params" property="sqlParams" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, usr_act_id, action_type
+  </sql>
+  <sql id="Blob_Column_List" >
+    action_sql_id, sql_params
+  </sql>
+  
+  
+   
+  <select id="selectLog" resultMap="BaseResultMap" parameterType="com.mhtech.platform.log.pojo.UserActionLogDetailDTO">
+		SELECT * from sp_user_action_detail
+		<where>
+			<if test="id!=null"> id=#{id} </if>
+			<if test="usrActId!=null">and usr_act_id=#{usrActId}</if>
+			<if test="actionType!=null">and action_type=#{actionType}</if>
+			<if test="actionSqlId!=null">and action_sql_id=#{actionSqlId}</if>
+			<if test="sqlParams!=null">and sql_params=#{sqlParams}</if>
+		</where>
+	</select>
+	<select id="selectLogSum" resultType="java.lang.Integer" parameterType="com.mhtech.platform.log.pojo.UserActionLogDetailDTO">
+		SELECT COUNT(id) from sp_user_action_detail
+		<where>
+			<if test="id!=null"> id=#{id} </if>
+			<if test="usrActId!=null">and usr_act_id=#{usrActId}</if>
+			<if test="actionType!=null">and action_type=#{actionType}</if>
+			<if test="actionSqlId!=null">and action_sql_id=#{actionSqlId}</if>
+			<if test="sqlParams!=null">and sql_params=#{sqlParams}</if>
+		</where>
+	</select>
+	
+  
+   <delete id="deleteId" parameterType="java.lang.Long" >
+   
+       DELETE  from sp_user_action_detail where  id in
+       <foreach collection="array"  item="item" open="(" separator="," close=")"  >
+              #{item}
+       </foreach>
+   </delete>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sp_user_action_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sp_user_action_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mhtech.platform.msrv.sharing.dao.model.UserActionDetailWithBLOBs" >
+    insert into sp_user_action_detail (id, usr_act_id, action_type, 
+      action_sql_id, sql_params)
+    values (#{id,jdbcType=BIGINT}, #{usrActId,jdbcType=BIGINT}, #{actionType,jdbcType=VARCHAR}, 
+      #{actionSqlId,jdbcType=LONGVARCHAR}, #{sqlParams,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.UserActionDetailWithBLOBs" >
+    insert into sp_user_action_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="usrActId != null" >
+        usr_act_id,
+      </if>
+      <if test="actionType != null" >
+        action_type,
+      </if>
+      <if test="actionSqlId != null" >
+        action_sql_id,
+      </if>
+      <if test="sqlParams != null" >
+        sql_params,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="usrActId != null" >
+        #{usrActId,jdbcType=BIGINT},
+      </if>
+      <if test="actionType != null" >
+        #{actionType,jdbcType=VARCHAR},
+      </if>
+      <if test="actionSqlId != null" >
+        #{actionSqlId,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sqlParams != null" >
+        #{sqlParams,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mhtech.platform.msrv.sharing.dao.model.UserActionDetailWithBLOBs" >
+    update sp_user_action_detail
+    <set >
+      <if test="usrActId != null" >
+        usr_act_id = #{usrActId,jdbcType=BIGINT},
+      </if>
+      <if test="actionType != null" >
+        action_type = #{actionType,jdbcType=VARCHAR},
+      </if>
+      <if test="actionSqlId != null" >
+        action_sql_id = #{actionSqlId,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sqlParams != null" >
+        sql_params = #{sqlParams,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.mhtech.platform.msrv.sharing.dao.model.UserActionDetailWithBLOBs" >
+    update sp_user_action_detail
+    set usr_act_id = #{usrActId,jdbcType=BIGINT},
+      action_type = #{actionType,jdbcType=VARCHAR},
+      action_sql_id = #{actionSqlId,jdbcType=LONGVARCHAR},
+      sql_params = #{sqlParams,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mhtech.platform.msrv.sharing.dao.model.UserActionDetail" >
+    update sp_user_action_detail
+    set usr_act_id = #{usrActId,jdbcType=BIGINT},
+      action_type = #{actionType,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+	<insert id="batchInsert" parameterType="list">
+	  insert into sp_user_action_detail (id, usr_act_id, action_type, action_sql_id, sql_params) values 
+	<foreach collection="list" item="obj" separator="," >
+		(#{obj.id,jdbcType=BIGINT}, #{obj.usrActId,jdbcType=BIGINT}, #{obj.actionType,jdbcType=VARCHAR}, 
+		#{obj.actionSqlId,jdbcType=LONGVARCHAR}, #{obj.sqlParams,jdbcType=LONGVARCHAR})
+	</foreach>
+	</insert>
+</mapper>

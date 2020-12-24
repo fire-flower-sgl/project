@@ -1,0 +1,42 @@
+#
+server.port=8080
+
+#mysql
+spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+spring.datasource.driver-class-name = com.mysql.jdbc.Driver
+spring.datasource.url = jdbc:mysql://192.168.1.100:3306/springmvc?characterEncoding=utf8
+spring.datasource.username = root
+spring.datasource.password = 123456
+#dialect = org.hibernate.dialect.MySQLDialect
+#maxPoolSize=50
+#minPoolSize=10
+#initialPoolSize=20
+#maxIdleTime=300
+#batch_size=20
+
+#druid sql server 2000
+#driverClassName=net.sourceforge.jtds.jdbc.Driver
+#url=jdbc:jtds:sqlserver://192.168.0.127:1433;DatabaseName=sso
+#username=sa
+#password=123456
+ 
+#filters=stat
+ 
+spring.datasource.maxActive=150
+spring.datasource.initialSize=20
+spring.datasource.maxWait=60000
+spring.datasource.minIdle=10
+ 
+spring.datasource.timeBetweenEvictionRunsMillis=60000
+spring.datasource.minEvictableIdleTimeMillis=300000
+ 
+#spring.datasource.validationQuery=SELECT 'x'
+#spring.datasource.testWhileIdle=true
+#spring.datasource.testOnBorrow=false
+#spring.datasource.testOnReturn=false
+#spring.datasource.=true
+spring.datasource.maxOpenPreparedStatements=20
+
+spring.datasource.removeAbandoned=true
+spring.datasource.removeAbandonedTimeout=1800
+spring.datasource.logAbandoned=true
